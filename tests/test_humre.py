@@ -32,11 +32,15 @@ def test_random_regexes_I_found_online():
 
     assert r'((\d{3}|\(\d{3}\))?(\s|-|\.)?\d{3}(\s|-|\.)\d{4}(\s*(ext|x|ext.)\s*\d{2,5})?)' == \
         group(
+            # Area code:
             optional(group(either(exactly(3, digit), open_paren + exactly(3, digit) + close_paren))) +
             optional(group(either(whitespace, '-', r'\.'))) +
+            # First three digits:
             exactly(3, digit) +
             group(either(whitespace, '-', r'\.')) +
+            # Last four digits:
             exactly(4, digit) +
+            # Optional extension:
             optional(group(zero_or_more(whitespace) + group(either('ext', 'x', 'ext.')) + zero_or_more(whitespace) + between(2, 5, digit)))
             )
 
@@ -392,6 +396,18 @@ def test_zero_or_more():
     assert zero_or_more('x', 'y') == 'xy*'
 
 
+def test_zero_or_more_lazy():
+    with pytest.raises(ValueError) as excObj:
+        zero_or_more()
+    with pytest.raises(ValueError) as excObj:
+        zero_or_more('')
+    with pytest.raises(ValueError) as excObj:
+        zero_or_more('', '')
+
+    assert zero_or_more('x') == 'x*?'
+    assert zero_or_more('x', 'y') == 'xy*?'
+
+
 def test_one_or_more():
     with pytest.raises(ValueError) as excObj:
         one_or_more()
@@ -402,6 +418,18 @@ def test_one_or_more():
 
     assert one_or_more('x') == 'x+'
     assert one_or_more('x', 'y') == 'xy+'
+
+def test_one_or_more_lazy():
+    with pytest.raises(ValueError) as excObj:
+        one_or_more()
+    with pytest.raises(ValueError) as excObj:
+        one_or_more('')
+    with pytest.raises(ValueError) as excObj:
+        one_or_more('', '')
+
+    assert one_or_more('x') == 'x+?'
+    assert one_or_more('x', 'y') == 'xy+?'
+
 
 def test_starts_with():
     assert starts_with('') == '^'

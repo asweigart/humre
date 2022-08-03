@@ -34,3 +34,10 @@ Interesting Python regex syntax that I learned making this:
 - [A-z] captures both uppercase and lowercase just like [A-Za-z]
 
 - [À-ÿ] captures Roman letters with accent marks
+
+
+
+>>> re.compile('A{,3}').search(' AAAAA+')
+<re.Match object; span=(0, 0), match=''>
+>>> re.compile('A{,3}').search('AAAAA+')
+<re.Match object; span=(0, 3), match='AAA'>
