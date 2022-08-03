@@ -4,6 +4,9 @@ By Al Sweigart al@inventwithpython.com
 A human-readable regular expression module for Python."""
 
 
+# TODO - Add atomic grouping ((?>...)) and possessive quantifiers (*+, ++, ?+, {m,n}+) new in python 3.11
+# TODO - Add a warning if they are called from older versions of Python.
+
 import re
 from typing import ParamSpecArgs
 
@@ -46,7 +49,7 @@ lowercase = '[a-zà-ÿ]'
 nonlowercase = '[^a-zà-ÿ]'
 alphanumeric = '[A-zÀ-ÿ0-9]'
 nonalphanumeric = '[^A-zÀ-ÿ0-9]'
-number = r'(?:+|-)?(?:\d{1:3}(?:,\d{3})*)|(?:\d)+(?:\.\d+)' # 1,200.3456789
+number = r'(?:+|-)?(?:\d{1:3}(?:,\d{3})*)|(?:\d)+(?:\.\d+)'  # 1,200.3456789
 euro_number = r'(?:+|-)?(?:\d{1:3}(?:\.\d{3})*)|(?:\d)+(?:,\d+)'
 hexadecimal = '[0-9A-f]'
 nonhexadecimal = '[^0-9A-f]'
@@ -76,7 +79,7 @@ pipe = r'\|'
 open_paren = open_parenthesis = r'\('
 close_paren = close_parenthesis = r'\)'
 
-newline = r'\n' # TODO - double check this: do I want r'\n' or '\n' here?
+newline = r'\n'  # TODO - double check this: do I want r'\n' or '\n' here?
 tab = r'\t'
 quote = r"\'"
 double_quote = r'\"'
@@ -96,6 +99,7 @@ def esc(*listOfRegexStrs):  # type: (str) -> str
     """
     return re.escape(''.join(listOfRegexStrs))
 
+
 def compile(*listOfRegexStrs, flags=0):  # TODO fix type hint
     """A wrapper for re.compile(). This passes the strings in listOfRegexStrs
     as a single concatenated string to re.compile(). All other arguments to
@@ -107,6 +111,7 @@ def compile(*listOfRegexStrs, flags=0):  # TODO fix type hint
     <re.Match object; span=(0, 5), match='Hello'>
     """
     return re.compile(''.join(listOfRegexStrs), flags=flags)
+
 
 def group(*listOfRegexStrs):  # type: (str) -> str
     """Returns a string in the regex sytax for a regex group surrounded by
@@ -123,6 +128,7 @@ def group(*listOfRegexStrs):  # type: (str) -> str
     '(cat(dog)(moose))'
     """
     return '(' + ''.join(listOfRegexStrs) + ')'
+
 
 def positive_lookahead(*listOfRegexStrs):  # type: (str) -> str
     """Returns a string in the regex syntax for a positive lookahead
@@ -141,6 +147,7 @@ def positive_lookahead(*listOfRegexStrs):  # type: (str) -> str
     <re.Match object; span=(0, 5), match='kitty'>
     """
     return '(?=' + ''.join(listOfRegexStrs) + ')'
+
 
 def negative_lookahead(*listOfRegexStrs):  # type: (str) -> str
     """Returns a string in the regex syntax for a negative lookahead
@@ -161,6 +168,7 @@ def negative_lookahead(*listOfRegexStrs):  # type: (str) -> str
     """
     return '(?!' + ''.join(listOfRegexStrs) + ')'
 
+
 def positive_lookbehind(*listOfRegexStrs):  # type: (str) -> str
     """Returns a string in the regex syntax for a positive lookbehind
     assertion of the regex strings in listOfRegexStrs. A lookbehind
@@ -179,6 +187,7 @@ def positive_lookbehind(*listOfRegexStrs):  # type: (str) -> str
     True
     """
     return '(?<=' + ''.join(listOfRegexStrs) + ')'
+
 
 def negative_lookbehind(*listOfRegexStrs):  # type: (str) -> str
     """Returns a string in a negative lookbehind assertion of the regex
@@ -216,6 +225,7 @@ def named_group(name, *listOfRegexStrs):  # type: (str, str) -> str
         raise ValueError('name must contain only letters, numbers, and underscore and not start with a number')
     return '(?P<' + str(name) + '>' + ''.join(listOfRegexStrs) + ')'
 
+
 # TODO - is there a better name than this? noncapture()?
 def noncapturing_group(*listOfRegexStrs):
     r"""Returns a string in the regex syntax for a noncapturing group of the
@@ -230,6 +240,7 @@ def noncapturing_group(*listOfRegexStrs):
     '(?:pattern_to_look_for)'
     """
     return '(?:' + ''.join(listOfRegexStrs) + ')'
+
 
 def optional(*listOfRegexStrs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for an optional part of the
@@ -246,7 +257,9 @@ def optional(*listOfRegexStrs):  # type: (str) -> str
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return regexStr + '?'
 
-def either(*listOfRegexStrs): # TODO - it's going to be really easy to get this wrong when people pass multiple comma-separated arguments when they intended to pass fewer string arguments in. How do we avoid this problem?
+
+def either(*listOfRegexStrs):
+    # TODO - it's going to be really easy to get this wrong when people pass multiple comma-separated arguments when they intended to pass fewer string arguments in. How do we avoid this problem?
     r"""Returns a string in the regex syntax for the alternation or "or"
     operator of the regex strings in listOfRegexStrs. This matches one of
     the strings in listOfRegexStrs.
@@ -259,6 +272,7 @@ def either(*listOfRegexStrs): # TODO - it's going to be really easy to get this 
     if len(listOfRegexStrs) == 0:
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return '|'.join(listOfRegexStrs)
+
 
 def exactly(quantity, *listOfRegexStrs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching an exact number
@@ -278,6 +292,7 @@ def exactly(quantity, *listOfRegexStrs):  # type: (int, str) -> str
     if regexStr == '':
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return regexStr + '{' + str(quantity) + '}'
+
 
 def between(minimum, maximum, *listOfRegexStrs):  # type: (int, int, str) -> str
     r"""Returns a string in the regex syntax for matching an between the
@@ -309,6 +324,7 @@ def between(minimum, maximum, *listOfRegexStrs):  # type: (int, int, str) -> str
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return regexStr + '{' + str(minimum) + ',' + str(maximum) + '}'
 
+
 def at_least(minimum, *listOfRegexStrs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a minimum number
     of occurrences of the regex strings in listOfRegexStrs.
@@ -328,6 +344,7 @@ def at_least(minimum, *listOfRegexStrs):  # type: (int, str) -> str
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return regexStr + '{' + str(minimum) + ',}'
 
+
 def at_most(maximum, *listOfRegexStrs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a maximum number
     of occurrences of the regex strings in listOfRegexStrs.
@@ -346,6 +363,7 @@ def at_most(maximum, *listOfRegexStrs):  # type: (int, str) -> str
     if regexStr == '':
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return regexStr + '{,' + str(maximum) + '}'
+
 
 def zero_or_more(*listOfRegexStrs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more
@@ -398,20 +416,25 @@ def one_or_more_lazy(*listOfRegexStrs):  # type: (str) -> str
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return regexStr + '+?'
 
+
 def starts_with(*listOfRegexStrs):  # type: (str) -> str
     return '^' + ''.join(listOfRegexStrs)
+
 
 def ends_with(*listOfRegexStrs):  # type: (str) -> str
     return ''.join(listOfRegexStrs) + '$'
 
+
 def starts_and_ends_with(*listOfRegexStrs):  # type: (str) -> str
     return '^' + ''.join(listOfRegexStrs) + '$'
+
 
 def chars(*listOfRegexStrs):  # type: (str) -> str
     regexStr = ''.join(listOfRegexStrs)
     if regexStr == '':
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return '[' + regexStr + ']'
+
 
 def nonchars(*listOfRegexStrs):  # type: (str) -> str
     regexStr = ''.join(listOfRegexStrs)
@@ -420,14 +443,15 @@ def nonchars(*listOfRegexStrs):  # type: (str) -> str
     return '[^' + regexStr + ']'
 
 
-
 # TODO - should I have these group_*() functions? It does help cut down on the parentheses hell.
 def optional_group(*listOfRegexStrs):  # type: (str) -> str
     return '(' + ''.join(listOfRegexStrs) + ')?'
 
+
 def group_either(*listOfRegexStrs):
     listOfRegexStrs = [s for s in listOfRegexStrs if s != '']
     return '(' + '|'.join(listOfRegexStrs) + ')'
+
 
 def group_exactly(quantity, *listOfRegexStrs):  # type: (int, str) -> str
     if not isinstance(quantity, int):
@@ -436,6 +460,7 @@ def group_exactly(quantity, *listOfRegexStrs):  # type: (int, str) -> str
         raise ValueError('quantity must be a positive int')
 
     return '(' + ''.join(listOfRegexStrs) + '){' + str(quantity) + '}'
+
 
 def group_between(minimum, maximum, *listOfRegexStrs):  # type: (int, int, str) -> str
     if not isinstance(minimum, int):
@@ -451,6 +476,7 @@ def group_between(minimum, maximum, *listOfRegexStrs):  # type: (int, int, str) 
 
     return '(' + ''.join(listOfRegexStrs) + '){' + str(minimum) + ',' + str(maximum) + '}'
 
+
 def group_at_least(minimum, *listOfRegexStrs):  # type: (int, str) -> str
     if not isinstance(minimum, int):
         raise TypeError('minimum must be a positive int')
@@ -458,6 +484,7 @@ def group_at_least(minimum, *listOfRegexStrs):  # type: (int, str) -> str
         raise ValueError('minimum must be a positive int')
 
     return '(' + ''.join(listOfRegexStrs) + '){' + str(minimum) + ',}'
+
 
 def group_at_most(maximum, *listOfRegexStrs):  # type: (int, str) -> str
     if not isinstance(maximum, int):
@@ -467,17 +494,21 @@ def group_at_most(maximum, *listOfRegexStrs):  # type: (int, str) -> str
 
     return '(' + ''.join(listOfRegexStrs) + '){,' + str(maximum) + '}'
 
+
 def zero_or_more_group(*listOfRegexStrs):  # type: (str) -> str
     return '(' + ''.join(listOfRegexStrs) + ')*'
 
+
 def one_or_more_group(*listOfRegexStrs):  # type: (str) -> str
     return '(' + ''.join(listOfRegexStrs) + ')+'
+
 
 def group_chars(*listOfRegexStrs):  # type: (str) -> str
     regexStr = ''.join(listOfRegexStrs)
     if regexStr == '':
         raise ValueError('listOfRegexStrs must have at least one nonblank value')
     return '([' + regexStr + '])'
+
 
 def group_nonchars(*listOfRegexStrs):  # type: (str) -> str
     regexStr = ''.join(listOfRegexStrs)
@@ -486,9 +517,9 @@ def group_nonchars(*listOfRegexStrs):  # type: (str) -> str
     return '([^' + regexStr + '])'
 
 
-
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
 
 '''
