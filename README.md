@@ -1,8 +1,8 @@
 # Humre
 
-A human-readable regular expression module for Python. Humre handles regex syntax for you and creates regex strings to pass to Python's re.compile().
+A human-readable regular expression module for Python. Humre handles regex syntax for you and creates regex strings to pass to Python's re.compile(). Pronounced "hum, ree".
 
-Pronounced "hum, ree". It is similar to [Swift's regex DSL](https://swiftregex.com/) or an advanced form of Python regex's `re.VERBOSE` mode.
+It is similar to [Swift's regex DSL](https://swiftregex.com/) or an advanced form of Python regex's `re.VERBOSE` mode.
 
 Note that until version 1.0 is released, the API for this module could change. Please send suggestions and feedback to [al@inventwithpython.com](mailto://al@inventwithpython.com).
 

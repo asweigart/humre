@@ -732,7 +732,6 @@ def test_back_reference():
     assert back_reference(8) == BACK_8
     assert back_reference(9) == BACK_9
 
-
     with pytest.raises(TypeError) as excObj:
         back_ref('one')
     with pytest.raises(ValueError) as excObj:
@@ -742,6 +741,7 @@ def test_back_reference():
 
     for i in range(1, 20):
         assert back_ref(i) == '\\' + str(i)
+
 
 def test_ascii_letter_class():
     assert compile(ASCII_LETTER).match('') is None
@@ -797,7 +797,6 @@ def test_ascii_nonuppercase_class():
         assert compile(ASCII_NONUPPERCASE).match(chr(i))
     for i in range(33, 48):  # !-/
         assert compile(ASCII_NONUPPERCASE).match(chr(i))
-
 
 
 def test_ascii_lowercase_class():
@@ -856,7 +855,6 @@ def test_ascii_nonalphanumeric_class():
         assert compile(ASCII_NONALPHANUMERIC).match(chr(i))
 
 
-
 def test_ascii_numeric():
     # TODO - test that this doesn't match numeric characters outside of 0-9.
     assert compile(ASCII_NUMERIC).match('') is None
@@ -870,7 +868,6 @@ def test_ascii_numeric():
         assert compile(ASCII_NUMERIC).match(chr(i))
     for i in range(33, 48):  # !-/
         assert compile(ASCII_NUMERIC).match(chr(i)) is None
-
 
 
 def test_ascii_nonnumeric():
@@ -911,7 +908,6 @@ def test_number_pattern():
     assert compile(NUMBER).match('9,991,234.00')
     assert compile(NUMBER).match('+1,234.00')
     assert compile(NUMBER).match('-1,234.00')
-
 
 
 def test_euro_number_pattern():
@@ -990,7 +986,7 @@ def test_hexadecimal_number():
 
 def test_letter_character_class():
     assert compile(LETTER).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if chr(i).isalpha():
             assert compile(LETTER).match(chr(i))
@@ -1000,7 +996,7 @@ def test_letter_character_class():
 
 def test_nonletter_character_class():
     assert compile(NONLETTER).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if not chr(i).isalpha():
             assert compile(NONLETTER).match(chr(i))
@@ -1010,16 +1006,17 @@ def test_nonletter_character_class():
 
 def test_lowercase_character_class():
     assert compile(LOWERCASE).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if chr(i).islower():
             assert compile(LOWERCASE).match(chr(i))
         else:
             assert compile(LOWERCASE).match(chr(i)) is None
 
+
 def test_nonlowercase_character_class():
     assert compile(NONLOWERCASE).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if not chr(i).islower():
             assert compile(NONLOWERCASE).match(chr(i))
@@ -1029,16 +1026,17 @@ def test_nonlowercase_character_class():
 
 def test_uppercase_character_class():
     assert compile(UPPERCASE).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if chr(i).isupper():
             assert compile(UPPERCASE).match(chr(i))
         else:
             assert compile(UPPERCASE).match(chr(i)) is None
 
+
 def test_nonuppercase_character_class():
     assert compile(NONUPPERCASE).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if not chr(i).isupper():
             assert compile(NONUPPERCASE).match(chr(i))
@@ -1048,7 +1046,7 @@ def test_nonuppercase_character_class():
 
 def test_alphanumeric_character_class():
     assert compile(ALPHANUMERIC).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if chr(i).isalnum():
             assert compile(ALPHANUMERIC).match(chr(i))
@@ -1058,7 +1056,7 @@ def test_alphanumeric_character_class():
 
 def test_nonalphanumeric_character_class():
     assert compile(NONALPHANUMERIC).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if not chr(i).isalnum():
             assert compile(NONALPHANUMERIC).match(chr(i))
@@ -1066,10 +1064,9 @@ def test_nonalphanumeric_character_class():
             assert compile(NONALPHANUMERIC).match(chr(i)) is None
 
 
-
 def test_numeric_character_class():
     assert compile(NUMERIC).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if chr(i).isnumeric():
             assert compile(NUMERIC).match(chr(i))
@@ -1079,17 +1076,12 @@ def test_numeric_character_class():
 
 def test_nonnumeric_character_class():
     assert compile(NONNUMERIC).match('') is None
-    #for i in range(0, sys.maxunicode + 1):
+    # for i in range(0, sys.maxunicode + 1):
     for i in range(0, 1000):
         if not chr(i).isnumeric():
             assert compile(NONNUMERIC).match(chr(i))
         else:
             assert compile(NONNUMERIC).match(chr(i)) is None
-
-
-
-
-
 
 
 if __name__ == "__main__":
