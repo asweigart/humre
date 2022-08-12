@@ -235,11 +235,11 @@ Humre also provides constants for commonly used patterns:
 | `NONLOWERCASE` | (too big to display) | Matches `not islower()` |
 | `ALPHANUMERIC` | (too big to display) | Matches `isalnum()` |
 | `NONALPHANUMERIC` | (too big to display) | Matches `not isalnum()` |
-| `HEXADECIMAL` | `'[0-9A-f]'` | |
-| `NONHEXADECIMAL` | `'[^0-9A-f]'` | |
-| `NUMBER` | `r'(?:\+|-)?(?:(?:\d{1,3}(?:,\d{3})+)|\d+)(?:\.\d+)?'` | Comma-formatted numbers |
-| `EURO_NUMBER` | `r'(?:\+|-)?(?:(?:\d{1,3}(?:\.\d{3})+)|\d+)(?:,\d+)?'` | Period-formatted numbers |
-| `HEXADECIMAL_NUMBER` | `'(?:(?:0x|0X)[0-9a-f]+)|(?:(?:0x|0X)[0-9A-F]+)|(?:[0-9a-f]+)|(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
+| `HEXADECIMAL` | `'[0-9A-Fa-f]'` | |
+| `NONHEXADECIMAL` | `'[^0-9A-Fa-f]'` | |
+| `NUMBER` | `r'(?:\+\|-)?(?:(?:\d{1,3}(?:,\d{3})+)\|\d+)(?:\.\d+)?'` | Comma-formatted numbers |
+| `EURO_NUMBER` | `r'(?:\+\|-)?(?:(?:\d{1,3}(?:\.\d{3})+)\|\d+)(?:,\d+)?'` | Period-formatted numbers |
+| `HEXADECIMAL_NUMBER` | `'(?:(?:0x\|0X)[0-9a-f]+)\|(?:(?:0x\|0X)[0-9A-F]+)\|(?:[0-9a-f]+)\|(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
 | `ASCII_LETTER` | `'[A-Za-z]'` | |
 | `ASCII_NONLETTER` | `'[^A-Za-z]'` | |
 | `ASCII_UPPERCASE` | `'[A-Z]'` | |
