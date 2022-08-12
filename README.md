@@ -207,7 +207,7 @@ Humre provides constants for the `\d`, `\w`, and `\s` character classes as well 
 | `OPEN_BRACKET` | `r'\['` |
 | `CLOSE_BRACKET` | `r'\]'` |
 | `BACKSLASH` | `r'\\'` |
-| `PIPE` | `r'\|'` |
+| `PIPE` | `r'\\|'` |
 | `BACK_1` | `r'\1'` |
 | `BACK_2` | `r'\2'` |
 | `BACK_3` | `r'\3'` |
