@@ -144,7 +144,7 @@ def test_random_regexes_I_found_online():
 
     assert (
         r"\$\((?P<name>[A-Za-z0-9_]+)\)"
-        == DOLLAR_SIGN + OPEN_PAREN + named_group('name', one_or_more(chars('A-Za-z0-9_'))) + CLOSE_PAREN
+        == DOLLAR + OPEN_PAREN + named_group('name', one_or_more(chars('A-Za-z0-9_'))) + CLOSE_PAREN
     )
 
     assert "ccd id: \\d+" == 'ccd id: ' + one_or_more(DIGIT)
@@ -284,6 +284,11 @@ def test_random_regexes_I_found_online():
     assert r'[\W_]' == chars(NONWORD, '_')
 
 
+def test_join():
+    assert join('dog', 'cat', 'moose') == ''.join(['dog', 'cat', 'moose'])
+    assert join() == ''
+
+
 def test_esc():
     assert esc(r'hello') == re.escape(r'hello') == 'hello'
 
@@ -321,6 +326,9 @@ def test_group():
 
 
 def test_positive_lookahead():
+    assert lookahead('cat') == '(?=cat)'
+    assert lookahead('cat', 'dog', 'moose') == '(?=catdogmoose)'
+
     assert positive_lookahead('cat') == '(?=cat)'
     assert positive_lookahead('cat', 'dog', 'moose') == '(?=catdogmoose)'
 
@@ -331,6 +339,9 @@ def test_negative_lookahead():
 
 
 def test_positive_lookbehind():
+    assert lookbehind('cat') == '(?<=cat)'
+    assert lookbehind('cat', 'dog', 'moose') == '(?<=catdogmoose)'
+
     assert positive_lookbehind('cat') == '(?<=cat)'
     assert positive_lookbehind('cat', 'dog', 'moose') == '(?<=catdogmoose)'
 
@@ -742,7 +753,9 @@ def test_back_reference():
     for i in range(1, 20):
         assert back_ref(i) == '\\' + str(i)
 
-
+# Taking out these ASCII_* tests since the constants have been
+# removed for now (and probably permanently.)
+"""
 def test_ascii_letter_class():
     assert compile(ASCII_LETTER).match('') is None
     for i in range(65, 91):  # A-Z
@@ -882,7 +895,7 @@ def test_ascii_nonnumeric():
         assert compile(ASCII_NONNUMERIC).match(chr(i)) is None
     for i in range(33, 48):  # !-/
         assert compile(ASCII_NONNUMERIC).match(chr(i))
-
+"""
 
 def test_number_pattern():
     assert compile(NUMBER).match('') is None
@@ -1082,6 +1095,107 @@ def test_nonnumeric_character_class():
             assert compile(NONNUMERIC).match(chr(i))
         else:
             assert compile(NONNUMERIC).match(chr(i)) is None
+
+
+def test_constants():
+    assert DIGIT == r'\d'
+    assert WORD == r'\w'
+    assert WHITESPACE == r'\s'
+    assert NONDIGIT == r'\D'
+    assert NONWORD == r'\W'
+    assert NONWHITESPACE == r'\S'
+    assert BOUNDARY == r'\b'
+
+    # Constants copied from the re module:
+    # Changed in version 3.6: Flag constants are now instances of RegexFlag, which is a subclass of enum.IntFlag.
+    assert A == re.A
+    assert ASCII == re.ASCII
+    assert DEBUG == re.DEBUG
+    assert I == re.I
+    assert IGNORECASE == re.IGNORECASE
+    assert L == re.L
+    assert LOCALE == re.LOCALE
+    assert M == re.M
+    assert MULTILINE == re.MULTILINE
+    assert NOFLAG == 0  # re.NOFLAG  # New in 3.11
+    assert S == re.S
+    assert DOTALL == re.DOTALL
+    assert X == re.X
+    assert VERBOSE == re.VERBOSE
+
+    # Built-in Humre character classes:
+
+    # These ranges include more than just A-Za-z, but all Unicode characters
+    # that islower(), isupper(), and isalpha() identify as lowercase, uppercase,
+    # and alphabetical letter characters.
+    assert len(LETTER) == 1604
+    assert len(NONLETTER) == 1605
+    assert len(UPPERCASE) == 839
+    assert len(NONUPPERCASE) == 840
+    assert len(LOWERCASE) == 872
+    assert len(NONLOWERCASE) == 873
+    assert len(ALPHANUMERIC) == 2073
+    assert len(NONALPHANUMERIC) == 2074
+    assert len(NUMERIC) == 471
+    assert len(NONNUMERIC) == 472
+
+    # These ASCII_* constants have been taken out for now, and probably
+    # permanently.
+    """
+    assert ASCII_LETTER == '[A-Za-z]'
+    assert ASCII_NONLETTER == '[^A-Za-z]'
+    assert ASCII_UPPERCASE == '[A-Z]'
+    assert ASCII_NONUPPERCASE == '[^A-Z]'
+    assert ASCII_LOWERCASE == '[a-z]'
+    assert ASCII_NONLOWERCASE == '[^a-z]'
+    assert ASCII_ALPHANUMERIC == '[A-Za-z0-9]'
+    assert ASCII_NONALPHANUMERIC == '[^A-Za-z0-9]'
+    assert ASCII_NUMERIC == '[0-9]'
+    assert ASCII_NONNUMERIC == '[^0-9]'
+    """
+
+    assert HEXADECIMAL == '[0-9A-Fa-f]'
+    assert NONHEXADECIMAL == '[^0-9A-Fa-f]'
+
+    # Built-in Humre Patterns:
+    assert ANYTHING == '.*?'
+    assert EVERYTHING == '.*'
+    assert GREEDY_SOMETHING == '.+'
+    assert SOMETHING == '.+?'
+    assert ANYCHAR == '.'
+
+
+    assert PERIOD == r'\.'
+    assert CARET == r'\^'
+    assert DOLLAR == r'\$'
+    assert ASTERISK == r'\*'
+    assert PLUS == r'\+'
+    assert MINUS == r'\-'
+    assert QUESTION_MARK == r'\?'
+    assert OPEN_BRACE == r'\{'
+    assert CLOSE_BRACE == r'\}'
+    assert OPEN_BRACKET == r'\['
+    assert CLOSE_BRACKET == r'\]'
+    assert BACKSLASH == r'\\'
+    assert PIPE == r'\|'
+    assert OPEN_PAREN == OPEN_PARENTHESIS == r'\('
+    assert CLOSE_PAREN == CLOSE_PARENTHESIS == r'\)'
+
+    assert NEWLINE == r'\n'
+    assert TAB == r'\t'
+    assert QUOTE == r"\'"
+    assert DOUBLE_QUOTE == r'\"'
+
+    assert BACK_1 == r'\1'
+    assert BACK_2 == r'\2'
+    assert BACK_3 == r'\3'
+    assert BACK_4 == r'\4'
+    assert BACK_5 == r'\5'
+    assert BACK_6 == r'\6'
+    assert BACK_7 == r'\7'
+    assert BACK_8 == r'\8'
+    assert BACK_9 == r'\9'
+
 
 
 if __name__ == "__main__":

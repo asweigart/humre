@@ -2,7 +2,7 @@
 
 A human-readable regular expression module for Python. Humre handles regex syntax for you and creates regex strings to pass to Python's re.compile(). Pronounced "hum, ree".
 
-It is similar to [Swift's regex DSL](https://swiftregex.com/) or an advanced form of Python regex's `re.VERBOSE` mode.
+It is similar to [Swift's regex DSL](https://swiftregex.com/) or an advanced form of Python regex's `re.VERBOSE` mode. Code is read far more often than it is written, so the verbose Humre code may take a few seconds longer to write but pays for itself by being much easier to read and understand.
 
 Note that until version 1.0 is released, the API for this module could change. Please send suggestions and feedback to [al@inventwithpython.com](mailto://al@inventwithpython.com).
 
@@ -27,6 +27,10 @@ Frequently Asked Questions
 **What Does Humre Provide?**
 
 Humre provides a collection of functions and constants to create regex strings without having to know the specific regex symbols. These offer more structure and readability than regex strings.
+
+**Do I Need to Know Regular Expressions to Use Humre?**
+
+Yes and no. You still need to know what regular expressions are and how they're used. But instead of memorizing the punctuation marks for each regex feature you want to use, you can use the easier-to-remember Humre functions and constants. For example, `zero_or_more(chars('a-z'))` is easier to remember than `[a-z]*` if you are inexperienced with regex. But I recommend reading a general regex tutorial before using Humre.
 
 **What's Wrong with Python's re Module?**
 
@@ -57,9 +61,18 @@ In this case, sure. Generally this form importing is frowned on, but it'll keep 
 
 **How Do I Combine Humre's Functions and Constants Together?**
 
-Every Humre function returns a regex string, so you can use f-strings and string concatenation to combine them:
+Every Humre function returns a regex string and every Humre constant is a string, so you can use f-strings and string concatenation to combine them:
 
-    exactly(5, DIGIT) + optional(WHITESPACE) + one_or_more(NONWHITESPACE)
+    >>> from humre import *
+
+    >>> exactly(5, DIGIT) + optional(WHITESPACE) + one_or_more(NONWHITESPACE)
+    '\\d{5}\\s?\\S+'
+
+    >>> 'I am looking for %s grapes.' % (exactly(2, DIGIT))
+    'I am looking for \\d{2} grapes.'
+
+    >>> f'I am looking for {exactly(2, DIGIT)} grapes.''
+    'I am looking for \\d{2} grapes.'
 
 Humre vs re Comparison
 ----------------------
@@ -160,22 +173,34 @@ Here's a quick list of all of Humre's functions and constants, and the regex str
 | `optional_possessive('A')` | `'A?+'` |
 
 
-The convenience functions combine a Humre function with the `group()` function since putting regexes in groups is so common, such as with `([A-Z])+` putting the character class
+The convenience group functions combine a Humre function with the `group()` (or `noncap_group()`) function since putting regexes in groups is so common, such as with `([A-Z])+` putting the character class
 
 | Convenience Function | Function Equivalent | Regex Equivalent |
 |----------------------------|---------------------|------------------|
-| `optional_group('A')` | `optional(group('A'))` | `'(A)?'` |
-| `group_either('A')` | `group(either('A', 'B', 'C'))` | `'(A|B|C)'` |
-| `group_exactly('A')` | `group(exactly(3, 'A'))` | `'(A){3}'` |
-| `group_between('A')` | `group(between(3, 5, 'A'))` | `'(A){3,5}'` |
-| `group_at_least('A')` | `group(at_least(3, 'A'))` | `'(A){3,}'` |
-| `group_at_most('A')` | `group(at_most(3, 'A'))` | `'(A){,3}'` |
-| `zero_or_more_group('A')` | `zero_or_more(group('A'))` | `'(A)*'` |
-| `zero_or_more_lazy_group('A')` | `zero_or_more_lazy_group('A'))` | `'(A)*?'` |
-| `one_or_more_group('A')` | `one_or_more(group('A'))` | `'(A)+'` |
-| `one_or_more_lazy_group('A')` | `one_or_more_lazy(group('A'))` | `'(A)+?'` |
-| `group_chars('A-Z')` | `group(chars('A-Z'))` | `'([A-Z])'` |
-| `group_nonchars('A-Z')` | `group(nonchars('A-Z'))` | `(['^A-Z])'` |
+| `optional_group('A')` | `optional(noncap_group('A'))` | `'(A)?'` |
+| `optional_noncap_group('A')` | `optional(noncap_group('A'))` | `'(?:A)?'` |
+| `group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(A|B|C)'` |
+| `noncap_group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(?:A|B|C)'` |
+| `group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(A){3}'` |
+| `noncap_group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(?:A){3}'` |
+| `group_between('A')` | `noncap_group(between(3, 5, 'A'))` | `'(A){3,5}'` |
+| `noncap_group_between('A')` | `noncap_group(between(3, 5, 'A'))` | `'(?:A){3,5}'` |
+| `group_at_least('A')` | `noncap_group(at_least(3, 'A'))` | `'(A){3,}'` |
+| `noncap_group_at_least('A')` | `noncap_group(at_least(3, 'A'))` | `'(?:A){3,}'` |
+| `group_at_most('A')` | `noncap_group(at_most(3, 'A'))` | `'(A){,3}'` |
+| `noncap_group_at_most('A')` | `noncap_group(at_most(3, 'A'))` | `'(?:A){,3}'` |
+| `zero_or_more_group('A')` | `zero_or_more(noncap_group('A'))` | `'(A)*'` |
+| `zero_or_more_noncap_group('A')` | `zero_or_more(noncap_group('A'))` | `'(?:A)*'` |
+| `zero_or_more_lazy_group('A')` | `zero_or_more_lazy_noncap_group('A'))` | `'(A)*?'` |
+| `zero_or_more_lazy_noncap_group('A')` | `zero_or_more_lazy_noncap_group('A'))` | `'(?:A)*?'` |
+| `one_or_more_group('A')` | `one_or_more(noncap_group('A'))` | `'(A)+'` |
+| `one_or_more_noncap_group('A')` | `one_or_more(noncap_group('A'))` | `'(?:A)+'` |
+| `one_or_more_lazy_group('A')` | `one_or_more_lazy(noncap_group('A'))` | `'(A)+?'` |
+| `one_or_more_lazy_noncap_group('A')` | `one_or_more_lazy(noncap_group('A'))` | `'(?:A)+?'` |
+| `group_chars('A-Z')` | `noncap_group(chars('A-Z'))` | `'([A-Z])'` |
+| `noncap_group_chars('A-Z')` | `noncap_group(chars('A-Z'))` | `'(?:[A-Z])'` |
+| `group_nonchars('A-Z')` | `noncap_group(nonchars('A-Z'))` | `(['^A-Z])'` |
+| `noncap_group_nonchars('A-Z')` | `noncap_group(nonchars('A-Z'))` | `(?:['^A-Z])'` |
 
 Humre provides constants for the `\d`, `\w`, and `\s` character classes as well several other characters that need to be escaped:
 
@@ -237,14 +262,6 @@ Humre also provides constants for commonly used patterns:
 | `NONALPHANUMERIC` | (too big to display) | Matches `not isalnum()` |
 | `HEXADECIMAL` | `'[0-9A-f]'` | |
 | `NONHEXADECIMAL` | `'[^0-9A-f]'` | |
-| `NUMBER` | `r'(?:\+|-)?(?:(?:\d{1,3}(?:,\d{3})+)|\d+)(?:\.\d+)?'` | Comma-formatted numbers |
-| `EURO_NUMBER` | `r'(?:\+|-)?(?:(?:\d{1,3}(?:\.\d{3})+)|\d+)(?:,\d+)?'` | Period-formatted numbers |
-| `HEXADECIMAL_NUMBER` | `'(?:(?:0x|0X)[0-9a-f]+)|(?:(?:0x|0X)[0-9A-F]+)|(?:[0-9a-f]+)|(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
-| `ASCII_LETTER` | `'[A-Za-z]'` | |
-| `ASCII_NONLETTER` | `'[^A-Za-z]'` | |
-| `ASCII_UPPERCASE` | `'[A-Z]'` | |
-| `ASCII_NONUPPERCASE` | `'[^A-Z]'` | |
-| `ASCII_LOWERCASE` | `'[a-z]'` | |
-| `ASCII_NONLOWERCASE` | `'[^a-z]'` | |
-| `ASCII_ALPHANUMERIC` | `'[A-Za-z0-9]'` | |
-| `ASCII_NONALPHANUMERIC` | `'[^A-Za-z0-9]'` | |
+| `NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:,\d{3})+)&#124;\d+)(?:\.\d+)?'` | Comma-formatted numbers |
+| `EURO_NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:\.\d{3})+)&#124;\d+)(?:,\d+)?'` | Period-formatted numbers |
+| `HEXADECIMAL_NUMBER` | `'(?:(?:0x&#124;0X)[0-9a-f]+)&#124;(?:(?:0x&#124;0X)[0-9A-F]+)&#124;(?:[0-9a-f]+)&#124;(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
