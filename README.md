@@ -191,8 +191,8 @@ The convenience group functions combine a Humre function with the `group()` (or 
 | `noncap_group_at_most('A')` | `noncap_group(at_most(3, 'A'))` | `'(?:A){,3}'` |
 | `zero_or_more_group('A')` | `zero_or_more(group('A'))` | `'(A)*'` |
 | `zero_or_more_noncap_group('A')` | `zero_or_more(noncap_group('A'))` | `'(?:A)*'` |
-| `zero_or_more_lazy_group('A')` | `zero_or_more_lazy_group('A'))` | `'(A)*?'` |
-| `zero_or_more_lazy_noncap_group('A')` | `zero_or_more_lazy_noncap_group('A'))` | `'(?:A)*?'` |
+| `zero_or_more_lazy_group('A')` | `zero_or_more_lazy(group('A'))` | `'(A)*?'` |
+| `zero_or_more_lazy_noncap_group('A')` | `zero_or_more_lazy(noncap_group('A'))` | `'(?:A)*?'` |
 | `one_or_more_group('A')` | `one_or_more(group('A'))` | `'(A)+'` |
 | `one_or_more_noncap_group('A')` | `one_or_more(noncap_group('A'))` | `'(?:A)+'` |
 | `one_or_more_lazy_group('A')` | `one_or_more_lazy(group('A'))` | `'(A)+?'` |
