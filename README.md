@@ -10,7 +10,7 @@ Quickstart
 ----------
 
     >>> from humre import *
-    >>> regexStr = either(OPEN_PAREN + exactly(3, digit) + CLOSE_PAREN, exactly(3, DIGIT)) + '-' + exactly(3, digit) + '-' + exactly(4, DIGIT)
+    >>> regexStr = either(OPEN_PAREN + exactly(3, DIGIT) + CLOSE_PAREN, exactly(3, DIGIT)) + '-' + exactly(3, DIGIT) + '-' + exactly(4, DIGIT)
     >>> regexStr
     '\\(\\d{3}\\)|\\d{3}-\\d{3}-\\d{4}'
     >>> patternObj = compile(regexStr)
