@@ -10,7 +10,7 @@ Quickstart
 ----------
 
     >>> from humre import *
-    >>> regexStr = either(OPEN_PAREN + exactly(3, digit) + CLOSE_PAREN, exactly(3, DIGIT)) + '-' + exactly(3, digit) + '-' + exactly(4, DIGIT)
+    >>> regexStr = either(OPEN_PAREN + exactly(3, DIGIT) + CLOSE_PAREN, exactly(3, DIGIT)) + '-' + exactly(3, DIGIT) + '-' + exactly(4, DIGIT)
     >>> regexStr
     '\\(\\d{3}\\)|\\d{3}-\\d{3}-\\d{4}'
     >>> patternObj = compile(regexStr)
@@ -260,8 +260,8 @@ Humre also provides constants for commonly used patterns:
 | `NONLOWERCASE` | (too big to display) | Matches `not islower()` |
 | `ALPHANUMERIC` | (too big to display) | Matches `isalnum()` |
 | `NONALPHANUMERIC` | (too big to display) | Matches `not isalnum()` |
-| `HEXADECIMAL` | `'[0-9A-f]'` | |
-| `NONHEXADECIMAL` | `'[^0-9A-f]'` | |
+| `HEXADECIMAL` | `'[0-9A-Fa-f]'` | |
+| `NONHEXADECIMAL` | `'[^0-9A-Fa-f]'` | |
 | `NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:,\d{3})+)&#124;\d+)(?:\.\d+)?'` | Comma-formatted numbers |
 | `EURO_NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:\.\d{3})+)&#124;\d+)(?:,\d+)?'` | Period-formatted numbers |
 | `HEXADECIMAL_NUMBER` | `'(?:(?:0x&#124;0X)[0-9a-f]+)&#124;(?:(?:0x&#124;0X)[0-9A-F]+)&#124;(?:[0-9a-f]+)&#124;(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
