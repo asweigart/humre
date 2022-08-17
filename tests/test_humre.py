@@ -434,6 +434,8 @@ def test_between():
         between(1, 2, '')
     with pytest.raises(ValueError) as excObj:
         between(1, 2, '', '')
+    with pytest.raises(ValueError) as excObj:
+        between(2, 1, '')
 
     assert between(1, 2, 'cat') == 'cat{1,2}'
     assert between(1, 2, 'cat', 'dog') == 'catdog{1,2}'
@@ -586,6 +588,15 @@ def test_optional_group():
     assert group(optional_group('cat')) == '((cat)?)'
 
 
+def test_optional_noncap_group():
+    assert optional_noncap_group() == '(?:)?'
+    assert optional_noncap_group('') == '(?:)?'
+    assert optional_noncap_group('c') == '(?:c)?'
+    assert optional_noncap_group('c', 'a', 't') == '(?:cat)?'
+    assert optional_noncap_group('cat') == '(?:cat)?'
+    assert group(optional_noncap_group('cat')) == '((?:cat)?)'
+
+
 def test_group_either():
     assert group_either() == '()'
     assert group_either('') == '()'
@@ -593,6 +604,15 @@ def test_group_either():
     assert group_either('cat', 'dog', 'moose') == '(cat|dog|moose)'
     assert group_either('cat', '', 'moose') == '(cat|moose)'
     assert group_either('cat', 'dog', 'moose') == '(cat|dog|moose)'
+
+
+def test_noncap_group_either():
+    assert noncap_group_either() == '(?:)'
+    assert noncap_group_either('') == '(?:)'
+    assert noncap_group_either('', '') == '(?:)'
+    assert noncap_group_either('cat', 'dog', 'moose') == '(?:cat|dog|moose)'
+    assert noncap_group_either('cat', '', 'moose') == '(?:cat|moose)'
+    assert noncap_group_either('cat', 'dog', 'moose') == '(?:cat|dog|moose)'
 
 
 def test_group_exactly():
@@ -609,6 +629,20 @@ def test_group_exactly():
     assert group_exactly(0, 'cat') == '(cat){0}'
 
 
+def test_noncap_group_exactly():
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_exactly('forty two', 'cat')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_exactly(-1, 'cat')
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_exactly(1.0, 'cat')
+
+    assert noncap_group_exactly(1, 'cat') == '(?:cat){1}'
+    assert noncap_group_exactly(1, 'cat', 'dog') == '(?:catdog){1}'
+    assert noncap_group_exactly(9999, 'cat') == '(?:cat){9999}'
+    assert noncap_group_exactly(0, 'cat') == '(?:cat){0}'
+
+
 def test_group_between():
     with pytest.raises(TypeError) as excObj:
         group_between('forty two', 1, 'cat')
@@ -622,6 +656,10 @@ def test_group_between():
         group_between(1, -1, 'cat')
     with pytest.raises(TypeError) as excObj:
         group_between(1, 1.0, 'cat')
+    with pytest.raises(ValueError) as excObj:
+        group_between(2, 1, '')
+    with pytest.raises(ValueError) as excObj:
+        group_between(2, 1, '', '')
 
     assert group_between(1, 2) == '(){1,2}'
     assert group_between(1, 2, '') == '(){1,2}'
@@ -630,6 +668,33 @@ def test_group_between():
     assert group_between(1, 2, 'cat', 'dog') == '(catdog){1,2}'
     assert group_between(9999, 99999, 'cat') == '(cat){9999,99999}'
     assert group_between(0, 0, 'cat') == '(cat){0,0}'
+
+
+def test_noncap_group_between():
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_between('forty two', 1, 'cat')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_between(-1, 1, 'cat')
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_between(1.0, 1, 'cat')
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_between(1, 'forty two', 'cat')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_between(1, -1, 'cat')
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_between(1, 1.0, 'cat')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_between(2, 1, '')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_between(2, 1, '', '')
+
+    assert noncap_group_between(1, 2) == '(?:){1,2}'
+    assert noncap_group_between(1, 2, '') == '(?:){1,2}'
+    assert noncap_group_between(1, 2, '', '') == '(?:){1,2}'
+    assert noncap_group_between(1, 2, 'cat') == '(?:cat){1,2}'
+    assert noncap_group_between(1, 2, 'cat', 'dog') == '(?:catdog){1,2}'
+    assert noncap_group_between(9999, 99999, 'cat') == '(?:cat){9999,99999}'
+    assert noncap_group_between(0, 0, 'cat') == '(?:cat){0,0}'
 
 
 def test_group_at_least():
@@ -649,6 +714,23 @@ def test_group_at_least():
     assert group_at_least(0, 'cat') == '(cat){0,}'
 
 
+def test_noncap_group_at_least():
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_at_least('forty two', 'cat')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_at_least(-1, 'cat')
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_at_least(1.0, 'cat')
+
+    assert noncap_group_at_least(1) == '(?:){1,}'
+    assert noncap_group_at_least(1, '') == '(?:){1,}'
+    assert noncap_group_at_least(1, '', '') == '(?:){1,}'
+    assert noncap_group_at_least(1, 'cat') == '(?:cat){1,}'
+    assert noncap_group_at_least(1, 'cat', 'dog') == '(?:catdog){1,}'
+    assert noncap_group_at_least(9999, 'cat') == '(?:cat){9999,}'
+    assert noncap_group_at_least(0, 'cat') == '(?:cat){0,}'
+
+
 def test_group_at_most():
     with pytest.raises(TypeError) as excObj:
         group_at_most('forty two', 'cat')
@@ -666,12 +748,37 @@ def test_group_at_most():
     assert group_at_most(0, 'cat') == '(cat){,0}'
 
 
+def test_noncap_group_at_most():
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_at_most('forty two', 'cat')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_at_most(-1, 'cat')
+    with pytest.raises(TypeError) as excObj:
+        noncap_group_at_most(1.0, 'cat')
+
+    assert noncap_group_at_most(1) == '(?:){,1}'
+    assert noncap_group_at_most(1, '') == '(?:){,1}'
+    assert noncap_group_at_most(1, '', '') == '(?:){,1}'
+    assert noncap_group_at_most(1, 'cat') == '(?:cat){,1}'
+    assert noncap_group_at_most(1, 'cat', 'dog') == '(?:catdog){,1}'
+    assert noncap_group_at_most(9999, 'cat') == '(?:cat){,9999}'
+    assert noncap_group_at_most(0, 'cat') == '(?:cat){,0}'
+
+
 def test_zero_or_more_group():
     assert zero_or_more_group() == '()*'
     assert zero_or_more_group('') == '()*'
     assert zero_or_more_group('', '') == '()*'
     assert zero_or_more_group('x') == '(x)*'
     assert zero_or_more_group('x', 'y') == '(xy)*'
+
+
+def test_zero_or_more_noncap_group():
+    assert zero_or_more_noncap_group() == '(?:)*'
+    assert zero_or_more_noncap_group('') == '(?:)*'
+    assert zero_or_more_noncap_group('', '') == '(?:)*'
+    assert zero_or_more_noncap_group('x') == '(?:x)*'
+    assert zero_or_more_noncap_group('x', 'y') == '(?:xy)*'
 
 
 def test_zero_or_more_lazy_group():
@@ -682,6 +789,14 @@ def test_zero_or_more_lazy_group():
     assert zero_or_more_lazy_group('x', 'y') == '(xy)*?'
 
 
+def test_zero_or_more_lazy_noncap_group():
+    assert zero_or_more_lazy_noncap_group() == '(?:)*?'
+    assert zero_or_more_lazy_noncap_group('') == '(?:)*?'
+    assert zero_or_more_lazy_noncap_group('', '') == '(?:)*?'
+    assert zero_or_more_lazy_noncap_group('x') == '(?:x)*?'
+    assert zero_or_more_lazy_noncap_group('x', 'y') == '(?:xy)*?'
+
+
 def test_one_or_more_group():
     assert one_or_more_group() == '()+'
     assert one_or_more_group('') == '()+'
@@ -690,12 +805,28 @@ def test_one_or_more_group():
     assert one_or_more_group('x', 'y') == '(xy)+'
 
 
+def test_one_or_more_noncap_group():
+    assert one_or_more_noncap_group() == '(?:)+'
+    assert one_or_more_noncap_group('') == '(?:)+'
+    assert one_or_more_noncap_group('', '') == '(?:)+'
+    assert one_or_more_noncap_group('x') == '(?:x)+'
+    assert one_or_more_noncap_group('x', 'y') == '(?:xy)+'
+
+
 def test_one_or_more_lazy_group():
     assert one_or_more_lazy_group() == '()+?'
     assert one_or_more_lazy_group('') == '()+?'
     assert one_or_more_lazy_group('', '') == '()+?'
     assert one_or_more_lazy_group('x') == '(x)+?'
     assert one_or_more_lazy_group('x', 'y') == '(xy)+?'
+
+
+def test_one_or_more_lazy_noncap_group():
+    assert one_or_more_lazy_noncap_group() == '(?:)+?'
+    assert one_or_more_lazy_noncap_group('') == '(?:)+?'
+    assert one_or_more_lazy_noncap_group('', '') == '(?:)+?'
+    assert one_or_more_lazy_noncap_group('x') == '(?:x)+?'
+    assert one_or_more_lazy_noncap_group('x', 'y') == '(?:xy)+?'
 
 
 def test_group_chars():
@@ -710,6 +841,18 @@ def test_group_chars():
     assert group_chars('x', 'y') == '([xy])'
 
 
+def test_noncap_group_chars():
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_chars()
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_chars('')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_chars('', '')
+
+    assert noncap_group_chars('a-z') == '(?:[a-z])'
+    assert noncap_group_chars('x', 'y') == '(?:[xy])'
+
+
 def test_group_nonchars():
     with pytest.raises(ValueError) as excObj:
         group_nonchars()
@@ -720,6 +863,18 @@ def test_group_nonchars():
 
     assert group_nonchars('a-z') == '([^a-z])'
     assert group_nonchars('x', 'y') == '([^xy])'
+
+
+def test_noncap_group_nonchars():
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_nonchars()
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_nonchars('')
+    with pytest.raises(ValueError) as excObj:
+        noncap_group_nonchars('', '')
+
+    assert noncap_group_nonchars('a-z') == '(?:[^a-z])'
+    assert noncap_group_nonchars('x', 'y') == '(?:[^xy])'
 
 
 def test_back_reference():
@@ -752,6 +907,7 @@ def test_back_reference():
 
     for i in range(1, 20):
         assert back_ref(i) == '\\' + str(i)
+
 
 # Taking out these ASCII_* tests since the constants have been
 # removed for now (and probably permanently.)
@@ -896,6 +1052,7 @@ def test_ascii_nonnumeric():
     for i in range(33, 48):  # !-/
         assert compile(ASCII_NONNUMERIC).match(chr(i))
 """
+
 
 def test_number_pattern():
     assert compile(NUMBER).match('') is None
@@ -1164,7 +1321,6 @@ def test_constants():
     assert SOMETHING == '.+?'
     assert ANYCHAR == '.'
 
-
     assert PERIOD == r'\.'
     assert CARET == r'\^'
     assert DOLLAR == r'\$'
@@ -1196,6 +1352,72 @@ def test_constants():
     assert BACK_8 == r'\8'
     assert BACK_9 == r'\9'
 
+
+def test_inline_flags():
+    with pytest.raises(TypeError) as excObj:
+        inline_flag(42, 'foo', 'bar')
+    with pytest.raises(ValueError) as excObj:
+        inline_flag('au', 'foo', 'bar')
+    with pytest.raises(ValueError) as excObj:
+        inline_flag('ua', 'foo', 'bar')
+    with pytest.raises(ValueError) as excObj:
+        inline_flag('z', 'foo', 'bar')
+
+    assert inline_flag('a', 'foo', 'bar') == '(?a:foobar)'
+    assert inline_flag('i', 'foo', 'bar') == '(?i:foobar)'
+    # TODO - L flag requires passing a bytes object and not a string
+    # assert inline_flag('L', 'foo', 'bar') == '(?a:foobar)'
+    assert inline_flag('m', 'foo', 'bar') == '(?m:foobar)'
+    assert inline_flag('s', 'foo', 'bar') == '(?s:foobar)'
+    assert inline_flag('u', 'foo', 'bar') == '(?u:foobar)'
+    assert inline_flag('x', 'foo', 'bar') == '(?x:foobar)'
+
+    # TODO - test that "-" must be followed by only 'imsx' flags.
+    # TODO - test that exceptions get raised
+
+
+def test_atomic_group():
+    assert atomic_group() == '(?>)'
+    assert atomic_group('') == '(?>)'
+    assert atomic_group('', '') == '(?>)'
+    assert atomic_group('x') == '(?>x)'
+    assert atomic_group('x', 'y') == '(?>xy)'
+
+
+def test_zero_or_more_possessive():
+    with pytest.raises(ValueError) as excObj:
+        zero_or_more_possessive()
+    with pytest.raises(ValueError) as excObj:
+        zero_or_more_possessive('')
+    with pytest.raises(ValueError) as excObj:
+        zero_or_more_possessive('', '')
+
+    assert zero_or_more_possessive('x') == 'x*+'
+    assert zero_or_more_possessive('x', 'y') == 'xy*+'
+
+
+def test_one_or_more_possessive():
+    with pytest.raises(ValueError) as excObj:
+        one_or_more_possessive()
+    with pytest.raises(ValueError) as excObj:
+        one_or_more_possessive('')
+    with pytest.raises(ValueError) as excObj:
+        one_or_more_possessive('', '')
+
+    assert one_or_more_possessive('x') == 'x++'
+    assert one_or_more_possessive('x', 'y') == 'xy++'
+
+
+def test_optional_possessive():
+    with pytest.raises(ValueError) as excObj:
+        optional_possessive()
+    with pytest.raises(ValueError) as excObj:
+        optional_possessive('')
+    with pytest.raises(ValueError) as excObj:
+        optional_possessive('', '')
+
+    assert optional_possessive('x') == 'x?+'
+    assert optional_possessive('x', 'y') == 'xy?+'
 
 
 if __name__ == "__main__":

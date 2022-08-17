@@ -14,7 +14,7 @@ try:
 except ImportError:
     pass  # Do nothing if run with a version of Python that doesn't have type hints.
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 DIGIT = r'\d'
 WORD = r'\w'
@@ -778,6 +778,23 @@ def group_at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> str
     return '(' + ''.join(tuple_of_regex_strs) + '){,' + str(maximum) + '}'
 
 
+def noncap_group_at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> str
+    r"""Returns a string in the regex syntax for matching a maximum number
+    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    group.
+
+    >>> from humre import *
+    >>> noncap_group_at_most(3, 'abc')
+    '(?:abc){,3}'
+    """
+    if not isinstance(maximum, int):
+        raise TypeError('maximum must be a positive int')
+    if maximum < 0:
+        raise ValueError('maximum must be a positive int')
+
+    return '(?:' + ''.join(tuple_of_regex_strs) + '){,' + str(maximum) + '}'
+
+
 def zero_or_more_group(*tuple_of_regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more number
     of occurrences of the regex strings in tuple_of_regex_strs, placed in a
@@ -947,6 +964,9 @@ def zero_or_more_possessive(*tuple_of_regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a possessive quantifier
     of zero or more matches of the strings in tuple_of_regex_strs.
     Possessive quantifiers are new in 3.11"""
+    regexStr = ''.join(tuple_of_regex_strs)
+    if regexStr == '':
+        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
     return ''.join(tuple_of_regex_strs) + '*+'
 
 
@@ -954,6 +974,9 @@ def one_or_more_possessive(*tuple_of_regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a possessive quantifier
     of one or more matches of the strings in tuple_of_regex_strs.
     Possessive quantifiers are new in 3.11"""
+    regexStr = ''.join(tuple_of_regex_strs)
+    if regexStr == '':
+        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
     return ''.join(tuple_of_regex_strs) + '++'
 
 
@@ -961,7 +984,32 @@ def optional_possessive(*tuple_of_regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a possessive quantifier
     of zero or more matches of the strings in tuple_of_regex_strs.
     Possessive quantifiers are new in 3.11"""
+    regexStr = ''.join(tuple_of_regex_strs)
+    if regexStr == '':
+        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
     return ''.join(tuple_of_regex_strs) + '?+'
+
+
+def inline_flag(flags, *tuple_of_regex_strs):  # type: (str, str) -> str
+    r"""Returns a string in the regex syntax of the strings in
+    tuple_of_regex_strs using inline flags."""
+    if not isinstance(flags, str):
+        raise TypeError("flags argument must be a str, not " + str(type(flags)))
+
+    for flag in flags:
+        if flag not in 'aiLmsux-':
+            raise ValueError("flags argument is limited to the characters aiLmsux-")
+
+    mutuallyExclusiveFlagsCount = 0
+    if 'a' in flags:
+        mutuallyExclusiveFlagsCount += 1
+    if 'L' in flags:
+        mutuallyExclusiveFlagsCount += 1
+    if 'u' in flags:
+        mutuallyExclusiveFlagsCount += 1
+    if mutuallyExclusiveFlagsCount > 1:
+        raise ValueError("flags argument can only have at most one of 'a', 'L', and 'u'' flags")
+    return '(?' + flags + ':' + ''.join(tuple_of_regex_strs) + ')'
 
 
 # More built-in Humre patterns:
