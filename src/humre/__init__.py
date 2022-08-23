@@ -14,7 +14,7 @@ try:
 except ImportError:
     pass  # Do nothing if run with a version of Python that doesn't have type hints.
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 DIGIT = r'\d'
 WORD = r'\w'
