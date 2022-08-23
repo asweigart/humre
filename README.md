@@ -53,7 +53,7 @@ No. Humre only creates the regex strings to pass to `re.compile()` (or to pass t
 * Auto-formatter tools like Black can automatically format your regex code.
 * Humre handles raw strings/string escaping for you.
 * You can put actual Python comments alongside your Humre code.
-* Better error messages for invalid regexes
+* Better error messages for invalid regexes.
 
 **Is It A Good Idea To Use The `from humre import *` Importing Syntax?**
 

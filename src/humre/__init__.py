@@ -53,16 +53,16 @@ VERBOSE = re.VERBOSE
 # This part of the code is dedicated to Python core dev Łukasz Langa, who
 # is tired of having his name not be processed correctly by software.
 # https://youtu.be/7m5JA3XaZ4k
-def _getRegexCharacterClassStringFromCodePointRanges(tupleOfRanges):
+def _getRegexCharacterClassStringFromCodePointRanges(tuple_of_ranges):
     # A helper function to convert integer ranges into regex character class strings.
-    regexStr = []
-    for startRangeCodePoint, endRangeCodePoint in tupleOfRanges:
-        if startRangeCodePoint == endRangeCodePoint:
+    regex_str = []
+    for start_range_code_point, end_range_code_point in tuple_of_ranges:
+        if start_range_code_point == end_range_code_point:
             # This is not a range, just a single code point, so don't use a hyphen.
-            regexStr.append(chr(startRangeCodePoint))
+            regex_str.append(chr(start_range_code_point))
         else:
-            regexStr.append(chr(startRangeCodePoint) + '-' + chr(endRangeCodePoint))
-    return ''.join(regexStr)
+            regex_str.append(chr(start_range_code_point) + '-' + chr(end_range_code_point))
+    return ''.join(regex_str)
 
 
 # fmt: off
@@ -174,7 +174,7 @@ BACK_8 = r'\8'
 BACK_9 = r'\9'
 
 
-def back_reference(groupNumber):  # type: (int) -> str
+def back_reference(group_number):  # type: (int) -> str
     r"""Returns a string in the regex syntax for a back reference, such as
     \1, \2, etc.
 
@@ -184,24 +184,26 @@ def back_reference(groupNumber):  # type: (int) -> str
     >>> back_reference(2)
     '\\2'
     """
-    if not isinstance(groupNumber, int):
-        raise TypeError('groupNumber must be an integer 1 or greater, not ' + str(type(groupNumber)))
-    if groupNumber < 1:
-        raise ValueError('groupNumber must be an integer 1 or greater')
+    if not isinstance(group_number, int):
+        raise TypeError('group_number argument must be an integer 1 or greater, not ' + type(group_number).__qualname__)
+    if group_number < 1:
+        raise ValueError('group_number argument must be an integer 1 or greater, not ' + str(group_number))
 
-    return '\\' + str(groupNumber)
+    return '\\' + str(group_number)
 
 
 back_ref = back_reference
 
 
-def join(*args):
-    return ''.join(args)
+def join(*strs):  # type: (str) -> str
+    r"""Returns a concatenated string of the strings in strs. Equivalent to
+    ''.join(strs)."""
+    return ''.join(strs)
 
 
-def esc(*tuple_of_regex_strs):  # type: (str) -> str
-    r"""A wrapper for re.escape(). Escape special characters in the strings
-    in tuple_of_regex_strs.
+def esc(*regex_strs):  # type: (str) -> str
+    r"""A wrapper for re.escape(). Escapes special characters in the strings
+    in regex_strs.
 
     >>> from humre import *
     >>> esc('!#$%&')
@@ -211,11 +213,11 @@ def esc(*tuple_of_regex_strs):  # type: (str) -> str
     >>> re.escape('!#$%&') == esc('!#$%&')
     True
     """
-    return re.escape(''.join(tuple_of_regex_strs))
+    return re.escape(''.join(regex_strs))
 
 
-def compile(*tuple_of_regex_strs, flags=0):  # TODO fix type hint
-    """A wrapper for re.compile(). This passes the strings in tuple_of_regex_strs
+def compile(*regex_strs, flags=0):  # TODO fix type hint
+    """A wrapper for re.compile(). This passes the strings in regex_strs
     as a single concatenated string to re.compile(). All other arguments to
     re.compile() must be passed to the flags keyword argument.
 
@@ -224,12 +226,12 @@ def compile(*tuple_of_regex_strs, flags=0):  # TODO fix type hint
     >>> patternObj.search('Hello')
     <re.Match object; span=(0, 5), match='Hello'>
     """
-    return re.compile(''.join(tuple_of_regex_strs), flags=flags)
+    return re.compile(''.join(regex_strs), flags=flags)
 
 
-def group(*tuple_of_regex_strs):  # type: (str) -> str
+def group(*regex_strs):  # type: (str) -> str
     """Returns a string in the regex syntax for a regex group surrounded by
-    parentheses of the regex strings in tuple_of_regex_strs.
+    parentheses of the regex strings in regex_strs.
 
     >>> from humre import *
     >>> group('cat')
@@ -241,12 +243,12 @@ def group(*tuple_of_regex_strs):  # type: (str) -> str
     >>> group('cat', group('dog'), group('moose'))
     '(cat(dog)(moose))'
     """
-    return '(' + ''.join(tuple_of_regex_strs) + ')'
+    return '(' + ''.join(regex_strs) + ')'
 
 
-def lookahead(*tuple_of_regex_strs):  # type: (str) -> str
+def lookahead(*regex_strs):  # type: (str) -> str
     """Returns a string in the regex syntax for a positive lookahead
-    assertion of the regex strings in tuple_of_regex_strs. A lookahead matches
+    assertion of the regex strings in regex_strs. A lookahead matches
     text but does not consume it in the original parsed text.
 
     In the following example, 'kitty' is matched but only if 'cat' follows
@@ -260,15 +262,15 @@ def lookahead(*tuple_of_regex_strs):  # type: (str) -> str
     >>> compile('kitty' + positive_lookahead('cat')).search('kittycat')
     <re.Match object; span=(0, 5), match='kitty'>
     """
-    return '(?=' + ''.join(tuple_of_regex_strs) + ')'
+    return '(?=' + ''.join(regex_strs) + ')'
 
 
 positive_lookahead = lookahead
 
 
-def negative_lookahead(*tuple_of_regex_strs):  # type: (str) -> str
+def negative_lookahead(*regex_strs):  # type: (str) -> str
     """Returns a string in the regex syntax for a negative lookahead
-    assertion of the regex strings in tuple_of_regex_strs. A lookahead matches
+    assertion of the regex strings in regex_strs. A lookahead matches
     text but does not consume it in the original parsed text.
 
     In the following example, 'kitty' is matched but only if the 'cat'
@@ -283,12 +285,12 @@ def negative_lookahead(*tuple_of_regex_strs):  # type: (str) -> str
     >>> compile('kitty' + negative_lookahead('cat')).search('kittycat') == None
     True
     """
-    return '(?!' + ''.join(tuple_of_regex_strs) + ')'
+    return '(?!' + ''.join(regex_strs) + ')'
 
 
-def lookbehind(*tuple_of_regex_strs):  # type: (str) -> str
+def lookbehind(*regex_strs):  # type: (str) -> str
     """Returns a string in the regex syntax for a positive lookbehind
-    assertion of the regex strings in tuple_of_regex_strs. A lookbehind
+    assertion of the regex strings in regex_strs. A lookbehind
     matches text but does not consume it
     in the original parsed text.
 
@@ -303,15 +305,15 @@ def lookbehind(*tuple_of_regex_strs):  # type: (str) -> str
     >>> compile(positive_lookbehind('kitty') + 'cat').search('cat') == None
     True
     """
-    return '(?<=' + ''.join(tuple_of_regex_strs) + ')'
+    return '(?<=' + ''.join(regex_strs) + ')'
 
 
 positive_lookbehind = lookbehind
 
 
-def negative_lookbehind(*tuple_of_regex_strs):  # type: (str) -> str
+def negative_lookbehind(*regex_strs):  # type: (str) -> str
     """Returns a string in a negative lookbehind assertion of the regex
-    strings in tuple_of_regex_strs. A lookbehind matches text but does not
+    strings in regex_strs. A lookbehind matches text but does not
     consume it in the original parsed text.
 
     In the following example, 'cat' is matched but only if 'kitty' is not
@@ -325,12 +327,12 @@ def negative_lookbehind(*tuple_of_regex_strs):  # type: (str) -> str
     >>> compile(negative_lookbehind('kitty') + 'cat').search('black cat')
     <re.Match object; span=(6, 9), match='cat'>
     """
-    return '(?<!' + ''.join(tuple_of_regex_strs) + ')'
+    return '(?<!' + ''.join(regex_strs) + ')'
 
 
-def named_group(name, *tuple_of_regex_strs):  # type: (str, str) -> str
+def named_group(name, *regex_strs):  # type: (str, str) -> str
     r"""Returns a string in the regex syntax for a named group of the regex
-    strings in tuple_of_regex_strs.
+    strings in regex_strs.
 
     Named groups can be referred to by their name rather than their
     group number.
@@ -341,15 +343,17 @@ def named_group(name, *tuple_of_regex_strs):  # type: (str, str) -> str
     >>> named_group('pobox', r'PO BOX \d{3:5}')
     '(?P<pobox>PO BOX \\d{3:5})'
     """
+    if not isinstance(name, str):
+        raise TypeError('name argument must be a str, not ' + type(name).__qualname__)
     if re.match(r'\w+', name) is None or re.match(r'^\d', name):
-        raise ValueError('name must contain only letters, numbers, and underscore and not start with a number')
-    return '(?P<' + str(name) + '>' + ''.join(tuple_of_regex_strs) + ')'
+        raise ValueError('name must contain only letters, numbers, and underscore and not start with a number, not ' + repr(name)[:100])
+    return '(?P<' + str(name) + '>' + ''.join(regex_strs) + ')'
 
 
 # TODO - is there a better name than this? noncapture()?
-def noncap_group(*tuple_of_regex_strs):
+def noncap_group(*regex_strs):
     r"""Returns a string in the regex syntax for a noncapturing group of the
-    regex strings in tuple_of_regex_strs.
+    regex strings in regex_strs.
 
     Noncapturing groups are not included in the groups field of a Pattern
     object. They are useful for when you want to group parts of a regex
@@ -359,12 +363,12 @@ def noncap_group(*tuple_of_regex_strs):
     >>> noncap_group('pattern_to_look_for')
     '(?:pattern_to_look_for)'
     """
-    return '(?:' + ''.join(tuple_of_regex_strs) + ')'
+    return '(?:' + ''.join(regex_strs) + ')'
 
 
-def optional(*tuple_of_regex_strs):  # type: (str) -> str
+def optional(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for an optional part of the
-    pattern of the regex strings in tuple_of_regex_strs.
+    pattern of the regex strings in regex_strs.
 
     >>> from humre import *
     >>> optional('a')
@@ -372,31 +376,31 @@ def optional(*tuple_of_regex_strs):  # type: (str) -> str
     >>> optional(group('spam'))
     '(spam)?'
     """
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '?'
 
 
 # TODO - it's going to be really easy to get this wrong when people pass multiple comma-separated arguments when they intended to pass fewer string arguments in. How do we avoid this problem?
-def either(*tuple_of_regex_strs):  # type: (str) -> str
+def either(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for the alternation or "or"
-    operator of the regex strings in tuple_of_regex_strs. This matches one of
-    the strings in tuple_of_regex_strs.
+    operator of the regex strings in regex_strs. This matches one of
+    the strings in regex_strs.
 
     >>> from humre import *
     >>> either(group('cat'), group('dog'), group('moose'))
     '(cat)|(dog)|(moose)'
     """
-    tuple_of_regex_strs = tuple([s for s in tuple_of_regex_strs if s != ''])
-    if len(tuple_of_regex_strs) == 0:
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
-    return '|'.join(tuple_of_regex_strs)
+    regex_strs = tuple([s for s in regex_strs if s != ''])
+    if len(regex_strs) == 0:
+        raise ValueError('regex_strs argument must have at least one nonblank value')
+    return '|'.join(regex_strs)
 
 
-def exactly(quantity, *tuple_of_regex_strs):  # type: (int, str) -> str
+def exactly(quantity, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching an exact number
-    of occurrences of the regex strings in tuple_of_regex_strs.
+    of occurrences of the regex strings in regex_strs.
 
     >>> from humre import *
     >>> exactly(3, 'A')
@@ -405,162 +409,162 @@ def exactly(quantity, *tuple_of_regex_strs):  # type: (int, str) -> str
     <re.Match object; span=(0, 3), match='aaa'>
     """
     if not isinstance(quantity, int):
-        raise TypeError('quantity must be a positive int')
+        raise TypeError('quantity argument must be a positive int, not ' + type(quantity).__qualname__)
     if quantity < 0:
-        raise ValueError('quantity must be a positive int')
-    regexStr = ''.join(tuple_of_regex_strs)
+        raise ValueError('quantity argument must be a positive int, not ' + str(quantity))
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '{' + str(quantity) + '}'
 
 
-def between(minimum, maximum, *tuple_of_regex_strs):  # type: (int, int, str) -> str
+def between(minimum, maximum, *regex_strs):  # type: (int, int, str) -> str
     r"""Returns a string in the regex syntax for matching an between the
     minimum and maximum number of occurrences of the regex strings in
-    tuple_of_regex_strs.
+    regex_strs.
 
     >>> from humre import *
     >>> between(3, 5, 'abc')
     'abc{3,5}'
     """
     if not isinstance(minimum, int):
-        raise TypeError('minimum must be a positive int')
+        raise TypeError('minimum argument must be a positive int, not ' + type(minimum).__qualname__)
     if minimum < 0:
-        raise ValueError('minimum must be a positive int')
+        raise ValueError('minimum argument must be a positive int, not ' + str(minimum))
     if not isinstance(maximum, int):
-        raise TypeError('maximum must be a positive int')
+        raise TypeError('maximum argument must be a positive int, not ' + type(maximum).__qualname__)
     if maximum < 0:
-        raise ValueError('maximum must be a positive int')
+        raise ValueError('maximum argument must be a positive int, not ' + str(maximum))
     if minimum > maximum:
-        raise ValueError('minimum greater than maximum')
-    regexStr = ''.join(tuple_of_regex_strs)
+        raise ValueError('minimum argument ' + str(minimum) + ' must be less than maximum argument ' + str(maximum))
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '{' + str(minimum) + ',' + str(maximum) + '}'
 
 
-def at_least(minimum, *tuple_of_regex_strs):  # type: (int, str) -> str
+def at_least(minimum, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a minimum number
-    of occurrences of the regex strings in tuple_of_regex_strs.
+    of occurrences of the regex strings in regex_strs.
 
     >>> from humre import *
     >>> at_least(3, 'abc')
     'abc{3,}'
     """
     if not isinstance(minimum, int):
-        raise TypeError('minimum must be a positive int')
+        raise TypeError('minimum argument must be a positive int, not ' + type(minimum).__qualname__)
     if minimum < 0:
-        raise ValueError('minimum must be a positive int')
-    regexStr = ''.join(tuple_of_regex_strs)
+        raise ValueError('minimum argument must be a positive int, not ' + str(minimum))
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '{' + str(minimum) + ',}'
 
 
-def at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> str
+def at_most(maximum, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a maximum number
-    of occurrences of the regex strings in tuple_of_regex_strs.
+    of occurrences of the regex strings in regex_strs.
 
     >>> from humre import *
     >>> at_most(3, 'abc')
     'abc{,3}'
     """
     if not isinstance(maximum, int):
-        raise TypeError('maximum must be a positive int')
+        raise TypeError('maximum argument must be a positive int, not ' + type(maximum).__qualname__)
     if maximum < 0:
-        raise ValueError('maximum must be a positive int')
-    regexStr = ''.join(tuple_of_regex_strs)
+        raise ValueError('maximum argument must be a positive int, not ' + str(maximum))
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '{,' + str(maximum) + '}'
 
 
-def zero_or_more(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more
-    occurrences of the regex strings in tuple_of_regex_strs. This does a
+    occurrences of the regex strings in regex_strs. This does a
     greedy match, which tries to make the largest match possible.
 
     >>> from humre import *
     >>> zero_or_more('abc')
     'abc*'
     """
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
-    return ''.join(tuple_of_regex_strs) + '*'
+        raise ValueError('regex_strs argument must have at least one nonblank value')
+    return ''.join(regex_strs) + '*'
 
 
-def zero_or_more_lazy(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more_lazy(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more
-    occurrences of the regex strings in tuple_of_regex_strs. This does a
+    occurrences of the regex strings in regex_strs. This does a
     lazy match, which tries to make the smallest match possible.
 
     >>> from humre import *
     >>> zero_or_more_lazy('abc')
     'abc*?'
     """
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '*?'
 
 
-def one_or_more(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more
-    occurrences of the regex strings in tuple_of_regex_strs. This does a
+    occurrences of the regex strings in regex_strs. This does a
     lazy match, which tries to make the smallest match possible.
 
     >>> from humre import *
     >>> one_or_more('abc')
     'abc+'
     """
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '+'
 
 
-def one_or_more_lazy(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more_lazy(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching one or more
-    occurrences of the regex strings in tuple_of_regex_strs. This does a
+    occurrences of the regex strings in regex_strs. This does a
     lazy match, which tries to make the smallest match possible.
 
     >>> from humre import *
     >>> one_or_more_lazy('abc')
     'abc+?'
     """
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
+        raise ValueError('regex_strs argument must have at least one nonblank value')
     return regexStr + '+?'
 
 
-def starts_with(*tuple_of_regex_strs):  # type: (str) -> str
+def starts_with(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching the pattern
-    of the regex strings in tuple_of_regex_strs at the start of the searched
+    of the regex strings in regex_strs at the start of the searched
     text.
 
     >>> from humre import *
     >>> starts_with('abc')
     '^abc'
     """
-    return '^' + ''.join(tuple_of_regex_strs)
+    return '^' + ''.join(regex_strs)
 
 
-def ends_with(*tuple_of_regex_strs):  # type: (str) -> str
+def ends_with(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching the pattern
-    of the regex strings in tuple_of_regex_strs at the end of the searched
+    of the regex strings in regex_strs at the end of the searched
     text.
     >>> from humre import *
     >>> ends_with('abc')
     'abc$'
     """
-    return ''.join(tuple_of_regex_strs) + '$'
+    return ''.join(regex_strs) + '$'
 
 
-def starts_and_ends_with(*tuple_of_regex_strs):  # type: (str) -> str
+def starts_and_ends_with(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching the pattern
-    of the regex strings in tuple_of_regex_strs at the start and endof the
+    of the regex strings in regex_strs at the start and endof the
     searched text. (That is, the pattern must match the complete searched
     text.)
 
@@ -568,7 +572,7 @@ def starts_and_ends_with(*tuple_of_regex_strs):  # type: (str) -> str
     >>> starts_and_ends_with('abc')
     '^abc$'
     """
-    return '^' + ''.join(tuple_of_regex_strs) + '$'
+    return '^' + ''.join(regex_strs) + '$'
 
 
 def chars(*tuple_of_characters):  # type: (str) -> str
@@ -599,57 +603,57 @@ def nonchars(*tuple_of_characters):  # type: (str) -> str
     return '[^' + characters + ']'
 
 
-def optional_group(*tuple_of_regex_strs):  # type: (str) -> str
+def optional_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a group of the regex strings
-    in tuple_of_regex_strs, and the group is optional.
+    in regex_strs, and the group is optional.
 
     >>> from humre import *
     >>> optional_group('abc')
     '(abc)?'
     """
-    return '(' + ''.join(tuple_of_regex_strs) + ')?'
+    return '(' + ''.join(regex_strs) + ')?'
 
 
-def optional_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
+def optional_noncap_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a noncapturing group of the
-    regex strings in tuple_of_regex_strs, and the group is optional.
+    regex strings in regex_strs, and the group is optional.
 
     >>> from humre import *
     >>> optional_noncap_group('abc')
     '(?:abc)?'
     """
-    return '(?:' + ''.join(tuple_of_regex_strs) + ')?'
+    return '(?:' + ''.join(regex_strs) + ')?'
 
 
-def group_either(*tuple_of_regex_strs):  # type: (str) -> str
+def group_either(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for the alternation or "or"
-    operator of the patterns in tuple_of_regex_strs, and the alternation
+    operator of the patterns in regex_strs, and the alternation
     is placed in a group.
 
     >>> from humre import *
     >>> group_either('a', 'b', 'c')
     '(a|b|c)'
     """
-    tuple_of_regex_strs = tuple([s for s in tuple_of_regex_strs if s != ''])
-    return '(' + '|'.join(tuple_of_regex_strs) + ')'
+    regex_strs = tuple([s for s in regex_strs if s != ''])
+    return '(' + '|'.join(regex_strs) + ')'
 
 
-def noncap_group_either(*tuple_of_regex_strs):  # type: (str) -> str
+def noncap_group_either(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for the alternation or "or"
-    operator of the patterns in tuple_of_regex_strs, and the alternation
+    operator of the patterns in regex_strs, and the alternation
     is placed in a noncapturing group.
 
     >>> from humre import *
     >>> noncap_group_either('a', 'b', 'c')
     '(?:a|b|c)'
     """
-    tuple_of_regex_strs = tuple([s for s in tuple_of_regex_strs if s != ''])
-    return '(?:' + '|'.join(tuple_of_regex_strs) + ')'
+    regex_strs = tuple([s for s in regex_strs if s != ''])
+    return '(?:' + '|'.join(regex_strs) + ')'
 
 
-def group_exactly(quantity, *tuple_of_regex_strs):  # type: (int, str) -> str
+def group_exactly(quantity, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching an exact number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group.
 
     >>> from humre import *
@@ -657,16 +661,16 @@ def group_exactly(quantity, *tuple_of_regex_strs):  # type: (int, str) -> str
     '(abc){3}'
     """
     if not isinstance(quantity, int):
-        raise TypeError('quantity must be a positive int')
+        raise TypeError('quantity argument must be a positive int, not ' + type(quantity).__qualname__)
     if quantity < 0:
-        raise ValueError('quantity must be a positive int')
+        raise ValueError('quantity argument must be a positive int, not ' + str(quantity))
 
-    return '(' + ''.join(tuple_of_regex_strs) + '){' + str(quantity) + '}'
+    return '(' + ''.join(regex_strs) + '){' + str(quantity) + '}'
 
 
-def noncap_group_exactly(quantity, *tuple_of_regex_strs):  # type: (int, str) -> str
+def noncap_group_exactly(quantity, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching an exact number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     noncapturing group.
 
     >>> from humre import *
@@ -674,62 +678,62 @@ def noncap_group_exactly(quantity, *tuple_of_regex_strs):  # type: (int, str) ->
     '(?:abc){3}'
     """
     if not isinstance(quantity, int):
-        raise TypeError('quantity must be a positive int')
+        raise TypeError('quantity argument must be a positive int, not ' + type(quantity).__qualname__)
     if quantity < 0:
-        raise ValueError('quantity must be a positive int')
+        raise ValueError('quantity argument must be a positive int, not ' + str(quantity))
 
-    return '(?:' + ''.join(tuple_of_regex_strs) + '){' + str(quantity) + '}'
+    return '(?:' + ''.join(regex_strs) + '){' + str(quantity) + '}'
 
 
-def group_between(minimum, maximum, *tuple_of_regex_strs):  # type: (int, int, str) -> str
+def group_between(minimum, maximum, *regex_strs):  # type: (int, int, str) -> str
     r"""Returns a string in the regex syntax for matching between a minimum
     and maximum number of occurrences of the regex strings in
-    tuple_of_regex_strs, placed in a  group.
+    regex_strs, placed in a  group.
 
     >>> from humre import *
     >>> group_between(3, 5, 'abc')
     '(abc){3,5}'
     """
     if not isinstance(minimum, int):
-        raise TypeError('minimum must be a positive int')
+        raise TypeError('minimum argument must be a positive int, not ' + type(minimum).__qualname__)
     if minimum < 0:
-        raise ValueError('minimum must be a positive int')
+        raise ValueError('minimum argument must be a positive int, not ' + str(minimum))
     if not isinstance(maximum, int):
-        raise TypeError('maximum must be a positive int')
+        raise TypeError('maximum argument must be a positive int, not ' + type(maximum).__qualname__)
     if maximum < 0:
-        raise ValueError('maximum must be a positive int')
+        raise ValueError('maximum argument must be a positive int, not ' + str(maximum))
     if minimum > maximum:
-        raise ValueError('minimum greater than maximum')
+        raise ValueError('minimum argument ' + str(minimum) + ' must be less than maximum argument ' + str(maximum))
 
-    return '(' + ''.join(tuple_of_regex_strs) + '){' + str(minimum) + ',' + str(maximum) + '}'
+    return '(' + ''.join(regex_strs) + '){' + str(minimum) + ',' + str(maximum) + '}'
 
 
-def noncap_group_between(minimum, maximum, *tuple_of_regex_strs):  # type: (int, int, str) -> str
+def noncap_group_between(minimum, maximum, *regex_strs):  # type: (int, int, str) -> str
     r"""Returns a string in the regex syntax for matching between a minimum
     and maximum number of occurrences of the regex strings in
-    tuple_of_regex_strs, placed in a noncapturing group.
+    regex_strs, placed in a noncapturing group.
 
     >>> from humre import *
     >>> noncap_group_between(3, 5, 'abc')
     '(?:abc){3,5}'
     """
     if not isinstance(minimum, int):
-        raise TypeError('minimum must be a positive int')
+        raise TypeError('minimum argument must be a positive int, not ' + type(minimum).__qualname__)
     if minimum < 0:
-        raise ValueError('minimum must be a positive int')
+        raise ValueError('minimum argument must be a positive int, not ' + str(minimum))
     if not isinstance(maximum, int):
-        raise TypeError('maximum must be a positive int')
+        raise TypeError('maximum argument must be a positive int, not ' + type(maximum).__qualname__)
     if maximum < 0:
-        raise ValueError('maximum must be a positive int')
+        raise ValueError('maximum argument must be a positive int, not ' + str(maximum))
     if minimum > maximum:
-        raise ValueError('minimum greater than maximum')
+        raise ValueError('minimum argument ' + str(minimum) + ' must be less than maximum argument ' + str(maximum))
 
-    return '(?:' + ''.join(tuple_of_regex_strs) + '){' + str(minimum) + ',' + str(maximum) + '}'
+    return '(?:' + ''.join(regex_strs) + '){' + str(minimum) + ',' + str(maximum) + '}'
 
 
-def group_at_least(minimum, *tuple_of_regex_strs):  # type: (int, str) -> str
+def group_at_least(minimum, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a minimum number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group.
 
     >>> from humre import *
@@ -737,16 +741,16 @@ def group_at_least(minimum, *tuple_of_regex_strs):  # type: (int, str) -> str
     '(abc){3,}'
     """
     if not isinstance(minimum, int):
-        raise TypeError('minimum must be a positive int')
+        raise TypeError('minimum argument must be a positive int, not ' + type(minimum).__qualname__)
     if minimum < 0:
-        raise ValueError('minimum must be a positive int')
+        raise ValueError('minimum argument must be a positive int, not ' + str(minimum))
 
-    return '(' + ''.join(tuple_of_regex_strs) + '){' + str(minimum) + ',}'
+    return '(' + ''.join(regex_strs) + '){' + str(minimum) + ',}'
 
 
-def noncap_group_at_least(minimum, *tuple_of_regex_strs):  # type: (int, str) -> str
+def noncap_group_at_least(minimum, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a minimum number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     noncapturing group.
 
     >>> from humre import *
@@ -754,16 +758,16 @@ def noncap_group_at_least(minimum, *tuple_of_regex_strs):  # type: (int, str) ->
     '(?:abc){3,}'
     """
     if not isinstance(minimum, int):
-        raise TypeError('minimum must be a positive int')
+        raise TypeError('minimum argument must be a positive int, not ' + type(minimum).__qualname__)
     if minimum < 0:
-        raise ValueError('minimum must be a positive int')
+        raise ValueError('minimum argument must be a positive int, not ' + str(minimum))
 
-    return '(?:' + ''.join(tuple_of_regex_strs) + '){' + str(minimum) + ',}'
+    return '(?:' + ''.join(regex_strs) + '){' + str(minimum) + ',}'
 
 
-def group_at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> str
+def group_at_most(maximum, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a maximum number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group.
 
     >>> from humre import *
@@ -771,16 +775,16 @@ def group_at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> str
     '(abc){,3}'
     """
     if not isinstance(maximum, int):
-        raise TypeError('maximum must be a positive int')
+        raise TypeError('maximum argument must be a positive int, not ' + type(maximum).__qualname__)
     if maximum < 0:
-        raise ValueError('maximum must be a positive int')
+        raise ValueError('maximum argument must be a positive int, not ' + str(maximum))
 
-    return '(' + ''.join(tuple_of_regex_strs) + '){,' + str(maximum) + '}'
+    return '(' + ''.join(regex_strs) + '){,' + str(maximum) + '}'
 
 
-def noncap_group_at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> str
+def noncap_group_at_most(maximum, *regex_strs):  # type: (int, str) -> str
     r"""Returns a string in the regex syntax for matching a maximum number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group.
 
     >>> from humre import *
@@ -788,40 +792,40 @@ def noncap_group_at_most(maximum, *tuple_of_regex_strs):  # type: (int, str) -> 
     '(?:abc){,3}'
     """
     if not isinstance(maximum, int):
-        raise TypeError('maximum must be a positive int')
+        raise TypeError('maximum argument must be a positive int, not ' + type(maximum).__qualname__)
     if maximum < 0:
-        raise ValueError('maximum must be a positive int')
+        raise ValueError('maximum argument must be a positive int, not ' + str(maximum))
 
-    return '(?:' + ''.join(tuple_of_regex_strs) + '){,' + str(maximum) + '}'
+    return '(?:' + ''.join(regex_strs) + '){,' + str(maximum) + '}'
 
 
-def zero_or_more_group(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group.
 
     >>> from humre import *
     >>> zero_or_more_group('abc')
     '(abc)*'
     """
-    return '(' + ''.join(tuple_of_regex_strs) + ')*'
+    return '(' + ''.join(regex_strs) + ')*'
 
 
-def zero_or_more_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more_noncap_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     noncapturing group.
 
     >>> from humre import *
     >>> zero_or_more_noncap_group('abc')
     '(?:abc)*'
     """
-    return '(?:' + ''.join(tuple_of_regex_strs) + ')*'
+    return '(?:' + ''.join(regex_strs) + ')*'
 
 
-def zero_or_more_lazy_group(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more_lazy_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group. This is a lazy match, so it attempts to make the smallest possible
     match.
 
@@ -829,12 +833,12 @@ def zero_or_more_lazy_group(*tuple_of_regex_strs):  # type: (str) -> str
     >>> zero_or_more_lazy_group('abc')
     '(abc)*?'
     """
-    return '(' + ''.join(tuple_of_regex_strs) + ')*?'
+    return '(' + ''.join(regex_strs) + ')*?'
 
 
-def zero_or_more_lazy_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more_lazy_noncap_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching zero or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     noncapturing group. This is a lazy match, so it attempts to make the
     smallest possible match.
 
@@ -842,36 +846,36 @@ def zero_or_more_lazy_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
     >>> zero_or_more_lazy_noncap_group('abc')
     '(?:abc)*?'
     """
-    return '(?:' + ''.join(tuple_of_regex_strs) + ')*?'
+    return '(?:' + ''.join(regex_strs) + ')*?'
 
 
-def one_or_more_group(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching one or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group.
 
     >>> from humre import *
     >>> one_or_more_group('abc')
     '(abc)+'
     """
-    return '(' + ''.join(tuple_of_regex_strs) + ')+'
+    return '(' + ''.join(regex_strs) + ')+'
 
 
-def one_or_more_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more_noncap_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching one or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     noncapturing group.
 
     >>> from humre import *
     >>> one_or_more_noncap_group('abc')
     '(?:abc)+'
     """
-    return '(?:' + ''.join(tuple_of_regex_strs) + ')+'
+    return '(?:' + ''.join(regex_strs) + ')+'
 
 
-def one_or_more_lazy_group(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more_lazy_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching one or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     group. This is a lazy match, so it attempts to make the smallest possible
     match.
 
@@ -879,12 +883,12 @@ def one_or_more_lazy_group(*tuple_of_regex_strs):  # type: (str) -> str
     >>> one_or_more_lazy_group('abc')
     '(abc)+?'
     """
-    return '(' + ''.join(tuple_of_regex_strs) + ')+?'
+    return '(' + ''.join(regex_strs) + ')+?'
 
 
-def one_or_more_lazy_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more_lazy_noncap_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for matching one or more number
-    of occurrences of the regex strings in tuple_of_regex_strs, placed in a
+    of occurrences of the regex strings in regex_strs, placed in a
     noncapturing group. This is a lazy match, so it attempts to make the
     smallest possible match.
 
@@ -892,7 +896,7 @@ def one_or_more_lazy_noncap_group(*tuple_of_regex_strs):  # type: (str) -> str
     >>> one_or_more_lazy_noncap_group('abc')
     '(?:abc)+?'
     """
-    return '(?:' + ''.join(tuple_of_regex_strs) + ')+?'
+    return '(?:' + ''.join(regex_strs) + ')+?'
 
 
 def group_chars(*tuple_of_characters):  # type: (str) -> str
@@ -954,51 +958,51 @@ def noncap_group_nonchars(*tuple_of_characters):  # type: (str) -> str
 
 
 # TODO - Are there better names for the atomic group and possessive quantifier functions?
-def atomic_group(*tuple_of_regex_strs):  # type: (str) -> str
+def atomic_group(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for an atomic group of the
-    strings in tuple_of_regex_strs. Atomic groups are new in 3.11"""
-    return '(?>' + ''.join(tuple_of_regex_strs) + ')'
+    strings in regex_strs. Atomic groups are new in 3.11"""
+    return '(?>' + ''.join(regex_strs) + ')'
 
 
-def zero_or_more_possessive(*tuple_of_regex_strs):  # type: (str) -> str
+def zero_or_more_possessive(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a possessive quantifier
-    of zero or more matches of the strings in tuple_of_regex_strs.
+    of zero or more matches of the strings in regex_strs.
     Possessive quantifiers are new in 3.11"""
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
-    return ''.join(tuple_of_regex_strs) + '*+'
+        raise ValueError('regex_strs argument must have at least one nonblank value')
+    return ''.join(regex_strs) + '*+'
 
 
-def one_or_more_possessive(*tuple_of_regex_strs):  # type: (str) -> str
+def one_or_more_possessive(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a possessive quantifier
-    of one or more matches of the strings in tuple_of_regex_strs.
+    of one or more matches of the strings in regex_strs.
     Possessive quantifiers are new in 3.11"""
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
-    return ''.join(tuple_of_regex_strs) + '++'
+        raise ValueError('regex_strs argument must have at least one nonblank value')
+    return ''.join(regex_strs) + '++'
 
 
-def optional_possessive(*tuple_of_regex_strs):  # type: (str) -> str
+def optional_possessive(*regex_strs):  # type: (str) -> str
     r"""Returns a string in the regex syntax for a possessive quantifier
-    of zero or more matches of the strings in tuple_of_regex_strs.
+    of zero or more matches of the strings in regex_strs.
     Possessive quantifiers are new in 3.11"""
-    regexStr = ''.join(tuple_of_regex_strs)
+    regexStr = ''.join(regex_strs)
     if regexStr == '':
-        raise ValueError('tuple_of_regex_strs must have at least one nonblank value')
-    return ''.join(tuple_of_regex_strs) + '?+'
+        raise ValueError('regex_strs argument must have at least one nonblank value')
+    return ''.join(regex_strs) + '?+'
 
 
-def inline_flag(flags, *tuple_of_regex_strs):  # type: (str, str) -> str
+def inline_flag(flags, *regex_strs):  # type: (str, str) -> str
     r"""Returns a string in the regex syntax of the strings in
-    tuple_of_regex_strs using inline flags."""
+    regex_strs using inline flags."""
     if not isinstance(flags, str):
-        raise TypeError("flags argument must be a str, not " + str(type(flags)))
+        raise TypeError("flags argument must be a str, not " + type(flags).__qualname__)
 
     for flag in flags:
         if flag not in 'aiLmsux-':
-            raise ValueError("flags argument is limited to the characters aiLmsux-")
+            raise ValueError("flags argument is limited to the characters aiLmsux-, and cannot be " + repr(flags)[:100])
 
     mutuallyExclusiveFlagsCount = 0
     if 'a' in flags:
@@ -1008,8 +1012,8 @@ def inline_flag(flags, *tuple_of_regex_strs):  # type: (str, str) -> str
     if 'u' in flags:
         mutuallyExclusiveFlagsCount += 1
     if mutuallyExclusiveFlagsCount > 1:
-        raise ValueError("flags argument can only have at most one of 'a', 'L', and 'u'' flags")
-    return '(?' + flags + ':' + ''.join(tuple_of_regex_strs) + ')'
+        raise ValueError("flags argument can only have at most one of 'a', 'L', and 'u'' flags, and cannot be " + repr(flags)[:100])
+    return '(?' + flags + ':' + ''.join(regex_strs) + ')'
 
 
 # More built-in Humre patterns:
@@ -1063,16 +1067,18 @@ if __name__ == "__main__":
     doctest.testmod()
 
 '''
+This test shows that using + for string concatenation is a bit faster than using ''.join() for our use cases.
+
 # Testing string concatenation vs join() string method:
 
-def group1(*tuple_of_regex_strs):  # type: (str) -> str
-    return '(' + ''.join(tuple_of_regex_strs) + ')'
-def group2(*tuple_of_regex_strs):  # type: (str) -> str
-    return ''.join(['(', ''.join(tuple_of_regex_strs), ')'])
-def group3(*tuple_of_regex_strs):  # type: (str) -> str
-    return ''.join(['(', *tuple_of_regex_strs, ')'])
-def group4(*tuple_of_regex_strs):  # type: (str) -> str
-    return ''.join(('(', *tuple_of_regex_strs, ')'))
+def group1(*regex_strs):  # type: (str) -> str
+    return '(' + ''.join(regex_strs) + ')'
+def group2(*regex_strs):  # type: (str) -> str
+    return ''.join(['(', ''.join(regex_strs), ')'])
+def group3(*regex_strs):  # type: (str) -> str
+    return ''.join(['(', *regex_strs, ')'])
+def group4(*regex_strs):  # type: (str) -> str
+    return ''.join(('(', *regex_strs, ')'))
 import timeit
 print(timeit.timeit("group1('cat', 'dog')", globals=globals(), number=100000000))
 print(timeit.timeit("group2('cat', 'dog')", globals=globals(), number=100000000))
