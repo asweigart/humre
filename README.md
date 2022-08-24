@@ -78,6 +78,10 @@ Every Humre function returns a regex string and every Humre constant is a string
 
 Most Humre functions combine their arguments into one string for ease of use (that is, `group('cat', 'dog')` is the same as `group('catdog')`). The `humre.compile()` function does this to, so if you want to pass flags such as
 
+**Isn't Using Humre a Performance Hit Compared to Using re?**
+
+No. Humre functions are simple functions that do basic string manipulation. You only need to call them once when you create the regex pattern object. Your program, whether large or small, will spend far more time doing the actual pattern matching than creating the regex string.
+
 Humre vs re Comparison
 ----------------------
 

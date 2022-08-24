@@ -6,15 +6,131 @@ A human-readable regular expression module for Python."""
 # TODO - add functionality to parse regex strings and create the humre code for it.
 # TODO - Add inline flags like '(?i)'
 
-import re, itertools, functools
-
+import re
 
 try:
     from typing import ParamSpecArgs
 except ImportError:
     pass  # Do nothing if run with a version of Python that doesn't have type hints.
 
-__version__ = '0.1.4'
+__all__ = ['ALPHANUMERIC',
+ 'ANYCHAR',
+ 'ANYTHING',
+ 'ASTERISK',
+ 'BACKSLASH',
+ 'BACK_1',
+ 'BACK_2',
+ 'BACK_3',
+ 'BACK_4',
+ 'BACK_5',
+ 'BACK_6',
+ 'BACK_7',
+ 'BACK_8',
+ 'BACK_9',
+ 'BOUNDARY',
+ 'CARET',
+ 'CLOSE_BRACE',
+ 'CLOSE_BRACKET',
+ 'CLOSE_PAREN',
+ 'CLOSE_PARENTHESIS',
+ 'DIGIT',
+ 'DOLLAR',
+ 'DOUBLE_QUOTE',
+ 'EURO_NUMBER',
+ 'EVERYTHING',
+ 'GREEDY_SOMETHING',
+ 'HEXADECIMAL',
+ 'HEXADECIMAL_NUMBER',
+ 'LETTER',
+ 'LOWERCASE',
+ 'MINUS',
+ 'NEWLINE',
+ 'NONALPHANUMERIC',
+ 'NONDIGIT',
+ 'NONHEXADECIMAL',
+ 'NONLETTER',
+ 'NONLOWERCASE',
+ 'NONNUMERIC',
+ 'NONUPPERCASE',
+ 'NONWHITESPACE',
+ 'NONWORD',
+ 'NUMBER',
+ 'NUMERIC',
+ 'OPEN_BRACE',
+ 'OPEN_BRACKET',
+ 'OPEN_PAREN',
+ 'OPEN_PARENTHESIS',
+ 'PERIOD',
+ 'PIPE',
+ 'PLUS',
+ 'QUESTION_MARK',
+ 'QUOTE',
+ 'SOMETHING',
+ 'TAB',
+ 'UPPERCASE',
+ 'VERBOSE',
+ 'WHITESPACE',
+ 'WORD',
+ 'at_least',
+ 'at_most',
+ 'atomic_group',
+ 'back_ref',
+ 'back_reference',
+ 'between',
+ 'chars',
+ 'compile',
+ 'either',
+ 'ends_with',
+ 'esc',
+ 'exactly',
+ 'group',
+ 'group_at_least',
+ 'group_at_most',
+ 'group_between',
+ 'group_chars',
+ 'group_either',
+ 'group_exactly',
+ 'group_nonchars',
+ 'inline_flag',
+ 'join',
+ 'lookahead',
+ 'lookbehind',
+ 'named_group',
+ 'negative_lookahead',
+ 'negative_lookbehind',
+ 'noncap_group',
+ 'noncap_group_at_least',
+ 'noncap_group_at_most',
+ 'noncap_group_between',
+ 'noncap_group_chars',
+ 'noncap_group_either',
+ 'noncap_group_exactly',
+ 'noncap_group_nonchars',
+ 'nonchars',
+ 'one_or_more',
+ 'one_or_more_group',
+ 'one_or_more_lazy',
+ 'one_or_more_lazy_group',
+ 'one_or_more_lazy_noncap_group',
+ 'one_or_more_noncap_group',
+ 'one_or_more_possessive',
+ 'optional',
+ 'optional_group',
+ 'optional_noncap_group',
+ 'optional_possessive',
+ 'positive_lookahead',
+ 'positive_lookbehind',
+ 'starts_and_ends_with',
+ 'starts_with',
+ 'zero_or_more',
+ 'zero_or_more_group',
+ 'zero_or_more_lazy',
+ 'zero_or_more_lazy_group',
+ 'zero_or_more_lazy_noncap_group',
+ 'zero_or_more_noncap_group',
+ 'zero_or_more_possessive']
+
+__version__ = '0.1.5'
 
 DIGIT = r'\d'
 WORD = r'\w'
@@ -27,8 +143,11 @@ BOUNDARY = r'\b'
 # IGNORE_DIRECTIVE = '(?i)'
 
 
-# Constants copied from the re module:
-# Changed in version 3.6: Flag constants are now instances of RegexFlag, which is a subclass of enum.IntFlag.
+# Constants copied from the re module. Note that these aren't included in
+# __all__ do the strong possibility that they'll conflict with existing
+# variable names.
+# Changed in version 3.6: Flag constants are now instances of RegexFlag,
+# which is a subclass of enum.IntFlag.
 A = re.A
 ASCII = re.ASCII
 DEBUG = re.DEBUG
