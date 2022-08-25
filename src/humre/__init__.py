@@ -13,122 +13,35 @@ try:
 except ImportError:
     pass  # Do nothing if run with a version of Python that doesn't have type hints.
 
-__all__ = ['ALPHANUMERIC',
- 'ANYCHAR',
- 'ANYTHING',
- 'ASTERISK',
- 'BACKSLASH',
- 'BACK_1',
- 'BACK_2',
- 'BACK_3',
- 'BACK_4',
- 'BACK_5',
- 'BACK_6',
- 'BACK_7',
- 'BACK_8',
- 'BACK_9',
- 'BOUNDARY',
- 'CARET',
- 'CLOSE_BRACE',
- 'CLOSE_BRACKET',
- 'CLOSE_PAREN',
- 'CLOSE_PARENTHESIS',
- 'DIGIT',
- 'DOLLAR',
- 'DOUBLE_QUOTE',
- 'EURO_NUMBER',
- 'EVERYTHING',
- 'GREEDY_SOMETHING',
- 'HEXADECIMAL',
- 'HEXADECIMAL_NUMBER',
- 'LETTER',
- 'LOWERCASE',
- 'MINUS',
- 'NEWLINE',
- 'NONALPHANUMERIC',
- 'NONDIGIT',
- 'NONHEXADECIMAL',
- 'NONLETTER',
- 'NONLOWERCASE',
- 'NONNUMERIC',
- 'NONUPPERCASE',
- 'NONWHITESPACE',
- 'NONWORD',
- 'NUMBER',
- 'NUMERIC',
- 'OPEN_BRACE',
- 'OPEN_BRACKET',
- 'OPEN_PAREN',
- 'OPEN_PARENTHESIS',
- 'PERIOD',
- 'PIPE',
- 'PLUS',
- 'QUESTION_MARK',
- 'QUOTE',
- 'SOMETHING',
- 'TAB',
- 'UPPERCASE',
- 'VERBOSE',
- 'WHITESPACE',
- 'WORD',
- 'at_least',
- 'at_most',
- 'atomic_group',
- 'back_ref',
- 'back_reference',
- 'between',
- 'chars',
- 'compile',
- 'either',
- 'ends_with',
- 'esc',
- 'exactly',
- 'group',
- 'group_at_least',
- 'group_at_most',
- 'group_between',
- 'group_chars',
- 'group_either',
- 'group_exactly',
- 'group_nonchars',
- 'inline_flag',
- 'join',
- 'lookahead',
- 'lookbehind',
- 'named_group',
- 'negative_lookahead',
- 'negative_lookbehind',
- 'noncap_group',
- 'noncap_group_at_least',
- 'noncap_group_at_most',
- 'noncap_group_between',
- 'noncap_group_chars',
- 'noncap_group_either',
- 'noncap_group_exactly',
- 'noncap_group_nonchars',
- 'nonchars',
- 'one_or_more',
- 'one_or_more_group',
- 'one_or_more_lazy',
- 'one_or_more_lazy_group',
- 'one_or_more_lazy_noncap_group',
- 'one_or_more_noncap_group',
- 'one_or_more_possessive',
- 'optional',
- 'optional_group',
- 'optional_noncap_group',
- 'optional_possessive',
- 'positive_lookahead',
- 'positive_lookbehind',
- 'starts_and_ends_with',
- 'starts_with',
- 'zero_or_more',
- 'zero_or_more_group',
- 'zero_or_more_lazy',
- 'zero_or_more_lazy_group',
- 'zero_or_more_lazy_noncap_group',
- 'zero_or_more_noncap_group',
- 'zero_or_more_possessive']
+# fmt: off
+__all__ = ['ALPHANUMERIC', 'ANYCHAR', 'ANYTHING', 'ASTERISK', 'BACKSLASH',
+'BACK_1', 'BACK_2', 'BACK_3', 'BACK_4', 'BACK_5', 'BACK_6', 'BACK_7',
+'BACK_8', 'BACK_9', 'BOUNDARY', 'CARET', 'CLOSE_BRACE', 'CLOSE_BRACKET',
+'CLOSE_PAREN', 'CLOSE_PARENTHESIS', 'DIGIT', 'DOLLAR', 'DOUBLE_QUOTE',
+'EURO_NUMBER', 'EVERYTHING', 'HEXADECIMAL',
+'HEXADECIMAL_NUMBER', 'LETTER', 'LOWERCASE', 'MINUS', 'NEWLINE',
+'NONALPHANUMERIC', 'NONDIGIT', 'NONHEXADECIMAL', 'NONLETTER', 'NONLOWERCASE',
+'NONNUMERIC', 'NONUPPERCASE', 'NONWHITESPACE', 'NONWORD', 'NUMBER',
+'NUMERIC', 'OPEN_BRACE', 'OPEN_BRACKET', 'OPEN_PAREN', 'OPEN_PARENTHESIS',
+'PERIOD', 'PIPE', 'PLUS', 'QUESTION_MARK', 'QUOTE', 'SOMETHING', 'TAB',
+'UPPERCASE', 'WHITESPACE', 'WORD', 'at_least', 'at_most',
+'atomic_group', 'back_ref', 'back_reference', 'between', 'chars', 'compile',
+'either', 'ends_with', 'esc', 'exactly', 'group', 'group_at_least',
+'group_at_most', 'group_between', 'group_chars', 'group_either',
+'group_exactly', 'group_nonchars', 'inline_flag', 'join', 'lookahead',
+'lookbehind', 'named_group', 'negative_lookahead', 'negative_lookbehind',
+'noncap_group', 'noncap_group_at_least', 'noncap_group_at_most',
+'noncap_group_between', 'noncap_group_chars', 'noncap_group_either',
+'noncap_group_exactly', 'noncap_group_nonchars', 'nonchars', 'one_or_more',
+'one_or_more_group', 'one_or_more_lazy', 'one_or_more_lazy_group',
+'one_or_more_lazy_noncap_group', 'one_or_more_noncap_group',
+'one_or_more_possessive', 'optional', 'optional_group',
+'optional_noncap_group', 'optional_possessive', 'positive_lookahead',
+'positive_lookbehind', 'starts_and_ends_with', 'starts_with', 'zero_or_more',
+'zero_or_more_group', 'zero_or_more_lazy', 'zero_or_more_lazy_group',
+'zero_or_more_lazy_noncap_group', 'zero_or_more_noncap_group',
+'zero_or_more_possessive']
+# fmt: on
 
 __version__ = '0.1.5'
 
@@ -148,6 +61,9 @@ BOUNDARY = r'\b'
 # variable names.
 # Changed in version 3.6: Flag constants are now instances of RegexFlag,
 # which is a subclass of enum.IntFlag.
+"""
+# NOTE: Removed because names like A and DEBUG might be overriden.
+# We'll just use keyword arguments in compile() instead.
 A = re.A
 ASCII = re.ASCII
 DEBUG = re.DEBUG
@@ -162,6 +78,7 @@ S = re.S
 DOTALL = re.DOTALL
 X = re.X
 VERBOSE = re.VERBOSE
+"""
 
 # Built-in Humre character classes:
 
@@ -254,7 +171,7 @@ NONHEXADECIMAL = '[^0-9A-Fa-f]'
 # TODO - I'm still not sure about these names:
 ANYTHING = '.*?'
 EVERYTHING = '.*'
-GREEDY_SOMETHING = '.+'
+# GREEDY_SOMETHING = '.+' # TODO: Maybe it's better to not even have this, rather than have it with an awkward name.
 SOMETHING = '.+?'
 ANYCHAR = '.'
 
@@ -335,16 +252,48 @@ def esc(*regex_strs):  # type: (str) -> str
     return re.escape(''.join(regex_strs))
 
 
-def compile(*regex_strs, flags=0):  # TODO fix type hint
+def compile(
+    *regex_strs,
+    A=False,
+    ASCII=False,
+    DEBUG=False,
+    I=False,
+    IGNORECASE=False,
+    L=False,
+    LOCALE=False,
+    M=False,
+    MULTILINE=False,
+    S=False,
+    DOTALL=False,
+    X=False,
+    VERBOSE=False
+):  # TODO fix type hint
     """A wrapper for re.compile(). This passes the strings in regex_strs
     as a single concatenated string to re.compile(). All other arguments to
     re.compile() must be passed to the flags keyword argument.
 
     >>> from humre import *
-    >>> patternObj = compile('[a-z]+', flags=IGNORECASE)
+    >>> patternObj = compile('[a-z]+', IGNORECASE=True)
     >>> patternObj.search('Hello')
     <re.Match object; span=(0, 5), match='Hello'>
     """
+    # Create the bitfield flags for re.compile():
+    flags = 0
+    if A or ASCII:
+        flags |= re.ASCII
+    if DEBUG:
+        flags |= re.DEBUG
+    if I or IGNORECASE:
+        flags |= re.IGNORECASE
+    if L or LOCALE:
+        flags |= re.LOCALE
+    if M or MULTILINE:
+        flags |= re.MULTILINE
+    if S or DOTALL:
+        flags |= re.DOTALL
+    if X or VERBOSE:
+        flags |= re.VERBOSE
+
     return re.compile(''.join(regex_strs), flags=flags)
 
 
@@ -465,7 +414,10 @@ def named_group(name, *regex_strs):  # type: (str, str) -> str
     if not isinstance(name, str):
         raise TypeError('name argument must be a str, not ' + type(name).__qualname__)
     if re.match(r'\w+', name) is None or re.match(r'^\d', name):
-        raise ValueError('name must contain only letters, numbers, and underscore and not start with a number, not ' + repr(name)[:100])
+        raise ValueError(
+            'name must contain only letters, numbers, and underscore and not start with a number, not '
+            + repr(name)[:100]
+        )
     return '(?P<' + str(name) + '>' + ''.join(regex_strs) + ')'
 
 
@@ -1131,7 +1083,9 @@ def inline_flag(flags, *regex_strs):  # type: (str, str) -> str
     if 'u' in flags:
         mutuallyExclusiveFlagsCount += 1
     if mutuallyExclusiveFlagsCount > 1:
-        raise ValueError("flags argument can only have at most one of 'a', 'L', and 'u'' flags, and cannot be " + repr(flags)[:100])
+        raise ValueError(
+            "flags argument can only have at most one of 'a', 'L', and 'u'' flags, and cannot be " + repr(flags)[:100]
+        )
     return '(?' + flags + ':' + ''.join(regex_strs) + ')'
 
 

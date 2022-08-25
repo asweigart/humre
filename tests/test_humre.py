@@ -204,7 +204,7 @@ def test_random_regexes_I_found_online():
 
     assert '^GOOGLE_RELEASE=(.+)$' == starts_and_ends_with('GOOGLE_RELEASE=', group(one_or_more(ANYCHAR)))
 
-    assert '^(.+)=(.+)$' == starts_and_ends_with(group(GREEDY_SOMETHING), '=', group(GREEDY_SOMETHING))
+    assert '^(.+)=(.+)$' == starts_and_ends_with(group(one_or_more(ANYCHAR)), '=', group(one_or_more(ANYCHAR)))
 
     assert '<.*?>' == '<' + ANYTHING + '>'
 
@@ -300,22 +300,22 @@ def test_esc():
 
 def test_compile():
     assert compile('hello') == re.compile('hello')
-    assert compile('hello', flags=IGNORECASE | DOTALL) == re.compile('hello', re.IGNORECASE | re.DOTALL)
+    assert compile('hello', IGNORECASE=True, DOTALL=True) == re.compile('hello', re.IGNORECASE | re.DOTALL)
 
-    assert compile('hello', flags=A) == re.compile('hello', re.A)
-    assert compile('hello', flags=ASCII) == re.compile('hello', re.ASCII)
-    assert compile('hello', flags=DEBUG) == re.compile('hello', re.DEBUG)
-    assert compile('hello', flags=I) == re.compile('hello', re.I)
-    assert compile('hello', flags=IGNORECASE) == re.compile('hello', re.IGNORECASE)
+    assert compile('hello', A=True) == re.compile('hello', re.A)
+    assert compile('hello', ASCII=True) == re.compile('hello', re.ASCII)
+    assert compile('hello', DEBUG=True) == re.compile('hello', re.DEBUG)
+    assert compile('hello', I=True) == re.compile('hello', re.I)
+    assert compile('hello', IGNORECASE=True) == re.compile('hello', re.IGNORECASE)
     # Humre is not going to support bytes objects, which LOCALE requires.
-    # assert compile(b'hello', flags=L) == re.compile(b'hello', re.L)
-    # assert compile(b'hello', flags=LOCALE) == re.compile(b'hello', re.LOCALE)
-    assert compile('hello', flags=M) == re.compile('hello', re.M)
-    assert compile('hello', flags=MULTILINE) == re.compile('hello', re.MULTILINE)
-    assert compile('hello', flags=S) == re.compile('hello', re.S)
-    assert compile('hello', flags=DOTALL) == re.compile('hello', re.DOTALL)
-    assert compile('hello', flags=X) == re.compile('hello', re.X)
-    assert compile('hello', flags=VERBOSE) == re.compile('hello', re.VERBOSE)
+    # assert compile(b'hello', L=True) == re.compile(b'hello', re.L)
+    # assert compile(b'hello', LOCALE=True) == re.compile(b'hello', re.LOCALE)
+    assert compile('hello', M=True) == re.compile('hello', re.M)
+    assert compile('hello', MULTILINE=True) == re.compile('hello', re.MULTILINE)
+    assert compile('hello', S=True) == re.compile('hello', re.S)
+    assert compile('hello', DOTALL=True) == re.compile('hello', re.DOTALL)
+    assert compile('hello', X=True) == re.compile('hello', re.X)
+    assert compile('hello', VERBOSE=True) == re.compile('hello', re.VERBOSE)
 
 
 def test_group():
@@ -1265,6 +1265,8 @@ def test_constants():
 
     # Constants copied from the re module:
     # Changed in version 3.6: Flag constants are now instances of RegexFlag, which is a subclass of enum.IntFlag.
+    # NOTE: These were removed because of likely name conflicts if imported with `from humre import *`
+    """
     assert A == re.A
     assert ASCII == re.ASCII
     assert DEBUG == re.DEBUG
@@ -1279,6 +1281,7 @@ def test_constants():
     assert DOTALL == re.DOTALL
     assert X == re.X
     assert VERBOSE == re.VERBOSE
+    """
 
     # Built-in Humre character classes:
 
@@ -1317,7 +1320,7 @@ def test_constants():
     # Built-in Humre Patterns:
     assert ANYTHING == '.*?'
     assert EVERYTHING == '.*'
-    assert GREEDY_SOMETHING == '.+'
+    #assert GREEDY_SOMETHING == '.+'
     assert SOMETHING == '.+?'
     assert ANYCHAR == '.'
 
