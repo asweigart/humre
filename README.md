@@ -53,7 +53,7 @@ No. Humre only creates the regex strings to pass to `re.compile()` (or to pass t
 * Auto-formatter tools like Black can automatically format your regex code.
 * Humre handles raw strings/string escaping for you.
 * You can put actual Python comments alongside your Humre code.
-* Better error messages for invalid regexes
+* Better error messages for invalid regexes.
 
 **Is It A Good Idea To Use The `from humre import *` Importing Syntax?**
 
@@ -73,6 +73,10 @@ Every Humre function returns a regex string and every Humre constant is a string
 
     >>> f'I am looking for {exactly(2, DIGIT)} grapes.''
     'I am looking for \\d{2} grapes.'
+
+**Why Is the humre.compile() Function Not Working When I Pass Flags to It?**
+
+Most Humre functions combine their arguments into one string for ease of use (that is, `group('cat', 'dog')` is the same as `group('catdog')`). The `humre.compile()` function does this to, so if you want to pass flags such as
 
 Humre vs re Comparison
 ----------------------
@@ -265,3 +269,23 @@ Humre also provides constants for commonly used patterns:
 | `NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:,\d{3})+)&#124;\d+)(?:\.\d+)?'` | Comma-formatted numbers |
 | `EURO_NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:\.\d{3})+)&#124;\d+)(?:,\d+)?'` | Period-formatted numbers |
 | `HEXADECIMAL_NUMBER` | `'(?:(?:0x&#124;0X)[0-9a-f]+)&#124;(?:(?:0x&#124;0X)[0-9A-F]+)&#124;(?:[0-9a-f]+)&#124;(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
+
+Humre's `compile()` function's `flags` keyword argument takes the same flag values as `re.compile()`:
+
+| Humre `compile()` Flags | Equivalent `re.compile()` Flags | Meaning |
+|---|---|---|
+|`humre.A` | `re.A` | Same as `ASCII` |
+|`humre.ASCII` | `re.ASCII` | Makes several escapes like `\w`, `\b`, `\s` and `\d` match only on ASCII characters with the respective property. |
+|`humre.DEBUG` | `re.DEBUG` | Display debug information about compiled expression. |
+|`humre.I` | `re.I` | Same as `IGNORECASE` |
+|`humre.IGNORECASE` | `re.IGNORECASE` | Do case-insensitive matches. |
+|`humre.L` | `re.L` | Same as `LOCALE` |
+|`humre.LOCALE` | `re.LOCALE` | Do a locale-aware match. |
+|`humre.M` | `re.M` | Same as `MULTILINE` |
+|`humre.MULTILINE` | `re.MULTILINE` | Multi-line matching, affecting `^` and `$`. |
+|`humre.NOFLAG` | `re.NOFLAG` | Indicates no flag being applied. Used as a default value in function definitions. New in 3.11. |
+|`humre.S` | `re.S` | Same as `DOTALL`. Corresponds to the inline flag `(?s)`. |
+|`humre.DOTALL` | `re.DOTALL` | Make `.` match any character, including newlines. |
+|`humre.X` | `re.X` | Same as `VERBOSE` (X stands for "extended") |
+|`humre.VERBOSE` | `re.VERBOSE` | Enable verbose REs, which can be organized more cleanly and understandably. |
+
