@@ -162,7 +162,7 @@ Here's a quick list of all of Humre's functions and constants, and the regex str
 |----------------|------------------|
 | `group('A')` | `'(A)'` |
 | `optional('A')` | `'A?'` |
-| `either('A', 'B', 'C')` | `'A|B|C'` |
+| `either('A', 'B', 'C')` | `'A\|B\|C'` |
 | `exactly(3, 'A')` | `'A{3}'` |
 | `between(3, 5, 'A')` | `'A{3:5}'` |
 | `at_least(3, 'A')` | `'A{3,}'` |
