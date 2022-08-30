@@ -74,9 +74,22 @@ Every Humre function returns a regex string and every Humre constant is a string
     >>> f'I am looking for {exactly(2, DIGIT)} grapes.''
     'I am looking for \\d{2} grapes.'
 
+
+**Humre Seems Nice for Beginners, But Why Would Experienced Devs Want to Use It?**
+
+TODO
+
 **Why Is the humre.compile() Function Not Working When I Pass Flags to It?**
 
 Most Humre functions combine their arguments into one string for ease of use (that is, `group('cat', 'dog')` is the same as `group('catdog')`). The `humre.compile()` function does this to, so if you want to pass flags such as
+
+**Isn't Using Humre a Performance Hit Compared to Using re?**
+
+No. Humre functions are simple functions that do basic string manipulation. You only need to call them once when you create the regex pattern object. Your program, whether large or small, will spend far more time doing the actual pattern matching than creating the regex string.
+
+**Most Regexes Are Short Enough That the Syntax Doesn't Get In the Way. Why Use Humre for These?**
+
+Sure, the phone number example is simple enough that anyone who knows regex syntax can understand it.
 
 Humre vs re Comparison
 ----------------------
@@ -149,7 +162,7 @@ Here's a quick list of all of Humre's functions and constants, and the regex str
 |----------------|------------------|
 | `group('A')` | `'(A)'` |
 | `optional('A')` | `'A?'` |
-| `either('A', 'B', 'C')` | `'A|B|C'` |
+| `either('A', 'B', 'C')` | `'A\|B\|C'` |
 | `exactly(3, 'A')` | `'A{3}'` |
 | `between(3, 5, 'A')` | `'A{3:5}'` |
 | `at_least(3, 'A')` | `'A{3,}'` |
@@ -183,8 +196,8 @@ The convenience group functions combine a Humre function with the `group()` (or 
 |----------------------------|---------------------|------------------|
 | `optional_group('A')` | `optional(group('A'))` | `'(A)?'` |
 | `optional_noncap_group('A')` | `optional(noncap_group('A'))` | `'(?:A)?'` |
-| `group_either('A')` | `group(either('A', 'B', 'C'))` | `'(A|B|C)'` |
-| `noncap_group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(?:A|B|C)'` |
+| `group_either('A')` | `group(either('A', 'B', 'C'))` | `'(A\|B\|C)'` |
+| `noncap_group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(?:A\|B\|C)'` |
 | `group_exactly('A')` | `group(exactly(3, 'A'))` | `'(A){3}'` |
 | `noncap_group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(?:A){3}'` |
 | `group_between('A')` | `group(between(3, 5, 'A'))` | `'(A){3,5}'` |
