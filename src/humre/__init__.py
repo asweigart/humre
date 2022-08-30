@@ -43,7 +43,7 @@ __all__ = ['ALPHANUMERIC', 'ANYCHAR', 'ANYTHING', 'ASTERISK', 'BACKSLASH',
 'zero_or_more_possessive']
 # fmt: on
 
-__version__ = '0.1.5'
+__version__ = '0.2.0'
 
 DIGIT = r'\d'
 WORD = r'\w'

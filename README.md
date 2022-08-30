@@ -196,8 +196,8 @@ The convenience group functions combine a Humre function with the `group()` (or 
 |----------------------------|---------------------|------------------|
 | `optional_group('A')` | `optional(noncap_group('A'))` | `'(A)?'` |
 | `optional_noncap_group('A')` | `optional(noncap_group('A'))` | `'(?:A)?'` |
-| `group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(A|B|C)'` |
-| `noncap_group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(?:A|B|C)'` |
+| `group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(A\|B\|C)'` |
+| `noncap_group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(?:A\|B\|C)'` |
 | `group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(A){3}'` |
 | `noncap_group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(?:A){3}'` |
 | `group_between('A')` | `noncap_group(between(3, 5, 'A'))` | `'(A){3,5}'` |
