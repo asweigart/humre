@@ -278,9 +278,9 @@ Humre also provides constants for commonly used patterns:
 | `NONALPHANUMERIC` | (too big to display) | Matches `not isalnum()` |
 | `HEXADECIMAL` | `'[0-9A-Fa-f]'` | |
 | `NONHEXADECIMAL` | `'[^0-9A-Fa-f]'` | |
-| `NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:,\d{3})+)&#124;\d+)(?:\.\d+)?'` | Comma-formatted numbers |
-| `EURO_NUMBER` | `r'(?:\+&#124;-)?(?:(?:\d{1,3}(?:\.\d{3})+)&#124;\d+)(?:,\d+)?'` | Period-formatted numbers |
-| `HEXADECIMAL_NUMBER` | `'(?:(?:0x&#124;0X)[0-9a-f]+)&#124;(?:(?:0x&#124;0X)[0-9A-F]+)&#124;(?:[0-9a-f]+)&#124;(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
+| `NUMBER` | `r'(?:\+\|-)?(?:(?:\d{1,3}(?:,\d{3})+)\|\d+)(?:\.\d+)?'` | Comma-formatted numbers |
+| `EURO_NUMBER` | `r'(?:\+\|-)?(?:(?:\d{1,3}(?:\.\d{3})+)\|\d+)(?:,\d+)?'` | Period-formatted numbers |
+| `HEXADECIMAL_NUMBER` | `'(?:(?:0x\|0X)[0-9a-f]+)\|(?:(?:0x\|0X)[0-9A-F]+)\|(?:[0-9a-f]+)\|(?:[0-9A-F]+)'` | Can have leading `0x` or `0X`. |
 
 Humre's `compile()` function's `flags` keyword argument takes the same flag values as `re.compile()`:
 
