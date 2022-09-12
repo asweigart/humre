@@ -71,7 +71,7 @@ Every Humre function returns a regex string and every Humre constant is a string
     >>> 'I am looking for %s grapes.' % (exactly(2, DIGIT))
     'I am looking for \\d{2} grapes.'
 
-    >>> f'I am looking for {exactly(2, DIGIT)} grapes.''
+    >>> f'I am looking for {exactly(2, DIGIT)} grapes.'
     'I am looking for \\d{2} grapes.'
 
 
@@ -109,17 +109,16 @@ American Phone Number with Humre:
 Hexadecimal Number with Optional Leading `0x` or `0X` and Consistent Casing with re:
 
     import re
-    re.compile('(?:(?:0x|0X)[0-9a-f]+)|(?:(?:0x|0X)[0-9A-F]+)|(?:[0-9a-f]+)|(?:[0-9A-F]+)')
+    re.compile('(?:0[xX])?(?:[0-9a-f]+|[0-9A-F]+)')
 
-Hexadecimal Number with Optional Leading `0x` or `0X` and Consistent Casing with re:
+Hexadecimal Number with Optional Leading `0x` or `0X` and Consistent Casing with Humre:
 
     from humre import *
     compile(
-        either(
-            noncap_group(noncap_group(either('0x', '0X')), one_or_more(chars('0-9a-f'))),
-            noncap_group(noncap_group(either('0x', '0X')), one_or_more(chars('0-9A-F'))),
-            noncap_group(one_or_more(chars('0-9a-f'))),
-            noncap_group(one_or_more(chars('0-9A-F')))
+        zero_or_one(noncap_group('0', chars('xX'))),
+        noncap_group_either(
+            one_or_more(chars('0-9a-f')),
+            one_or_more(chars('0-9A-F')),
         )
     )
 
@@ -143,7 +142,7 @@ Number with or without comma-formatting including decimal point with Humre:
         )),
         # fractional number section (optional)
         optional(noncap_group(PERIOD, one_or_more(DIGIT)))
-        )
+    )
 
 Or you can use Humre's included `NUMBER` pattern:
 
