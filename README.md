@@ -194,29 +194,29 @@ The convenience group functions combine a Humre function with the `group()` (or 
 
 | Convenience Function | Function Equivalent | Regex Equivalent |
 |----------------------------|---------------------|------------------|
-| `optional_group('A')` | `optional(noncap_group('A'))` | `'(A)?'` |
+| `optional_group('A')` | `optional(group('A'))` | `'(A)?'` |
 | `optional_noncap_group('A')` | `optional(noncap_group('A'))` | `'(?:A)?'` |
-| `group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(A\|B\|C)'` |
+| `group_either('A')` | `group(either('A', 'B', 'C'))` | `'(A\|B\|C)'` |
 | `noncap_group_either('A')` | `noncap_group(either('A', 'B', 'C'))` | `'(?:A\|B\|C)'` |
-| `group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(A){3}'` |
+| `group_exactly('A')` | `group(exactly(3, 'A'))` | `'(A){3}'` |
 | `noncap_group_exactly('A')` | `noncap_group(exactly(3, 'A'))` | `'(?:A){3}'` |
-| `group_between('A')` | `noncap_group(between(3, 5, 'A'))` | `'(A){3,5}'` |
+| `group_between('A')` | `group(between(3, 5, 'A'))` | `'(A){3,5}'` |
 | `noncap_group_between('A')` | `noncap_group(between(3, 5, 'A'))` | `'(?:A){3,5}'` |
-| `group_at_least('A')` | `noncap_group(at_least(3, 'A'))` | `'(A){3,}'` |
+| `group_at_least('A')` | `group(at_least(3, 'A'))` | `'(A){3,}'` |
 | `noncap_group_at_least('A')` | `noncap_group(at_least(3, 'A'))` | `'(?:A){3,}'` |
-| `group_at_most('A')` | `noncap_group(at_most(3, 'A'))` | `'(A){,3}'` |
+| `group_at_most('A')` | `group(at_most(3, 'A'))` | `'(A){,3}'` |
 | `noncap_group_at_most('A')` | `noncap_group(at_most(3, 'A'))` | `'(?:A){,3}'` |
-| `zero_or_more_group('A')` | `zero_or_more(noncap_group('A'))` | `'(A)*'` |
+| `zero_or_more_group('A')` | `zero_or_more(group('A'))` | `'(A)*'` |
 | `zero_or_more_noncap_group('A')` | `zero_or_more(noncap_group('A'))` | `'(?:A)*'` |
-| `zero_or_more_lazy_group('A')` | `zero_or_more_lazy_noncap_group('A'))` | `'(A)*?'` |
-| `zero_or_more_lazy_noncap_group('A')` | `zero_or_more_lazy_noncap_group('A'))` | `'(?:A)*?'` |
-| `one_or_more_group('A')` | `one_or_more(noncap_group('A'))` | `'(A)+'` |
+| `zero_or_more_lazy_group('A')` | `zero_or_more_lazy(group('A'))` | `'(A)*?'` |
+| `zero_or_more_lazy_noncap_group('A')` | `zero_or_more_lazy(noncap_group('A'))` | `'(?:A)*?'` |
+| `one_or_more_group('A')` | `one_or_more(group('A'))` | `'(A)+'` |
 | `one_or_more_noncap_group('A')` | `one_or_more(noncap_group('A'))` | `'(?:A)+'` |
-| `one_or_more_lazy_group('A')` | `one_or_more_lazy(noncap_group('A'))` | `'(A)+?'` |
+| `one_or_more_lazy_group('A')` | `one_or_more_lazy(group('A'))` | `'(A)+?'` |
 | `one_or_more_lazy_noncap_group('A')` | `one_or_more_lazy(noncap_group('A'))` | `'(?:A)+?'` |
-| `group_chars('A-Z')` | `noncap_group(chars('A-Z'))` | `'([A-Z])'` |
+| `group_chars('A-Z')` | `group(chars('A-Z'))` | `'([A-Z])'` |
 | `noncap_group_chars('A-Z')` | `noncap_group(chars('A-Z'))` | `'(?:[A-Z])'` |
-| `group_nonchars('A-Z')` | `noncap_group(nonchars('A-Z'))` | `(['^A-Z])'` |
+| `group_nonchars('A-Z')` | `group(nonchars('A-Z'))` | `(['^A-Z])'` |
 | `noncap_group_nonchars('A-Z')` | `noncap_group(nonchars('A-Z'))` | `(?:['^A-Z])'` |
 
 Humre provides constants for the `\d`, `\w`, and `\s` character classes as well several other characters that need to be escaped:
