@@ -267,7 +267,6 @@ Humre also provides constants for commonly used patterns:
 | `ANYTHING` | `'.*?'` | lazy "zero or more of anything" match |
 | `EVERYTHING` | `'.*'` | greedy "zero or more of anything" match, aka dot star |
 | `SOMETHING` | `'.+?'` | lazy "one or more of anything" match |
-| `GREEDY_SOMETHING` | `'.+'` | greedy "one or more of anything" match |
 | `ANYCHAR` | `'.'` | |
 | `LETTER` | (too big to display) | Matches `isalpha()` |
 | `NONLETTER` | (too big to display) | Matches `not isalpha()` |
